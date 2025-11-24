@@ -9,9 +9,8 @@
         :root {
             --primary-color: #00bcd4; /* 科技藍 */
             --secondary-color: #3f51b5; /* 深邃藍 */
-            --icon-color: #ff9800; /* 工程橘，用於圖示突顯 */
+            --icon-color: #ff9800; /* 工程橘 */
             --text-color: #333;
-            /* 背景維持動態漸層 */
             --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             --card-bg: rgba(255, 255, 255, 0.96);
         }
@@ -34,7 +33,6 @@
             overflow: hidden;
         }
 
-        /* 背景流動動畫 */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -63,7 +61,6 @@
         .logo-text {
             font-size: 2.8rem;
             font-weight: 900;
-            /* 文字漸層效果 */
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             -webkit-background-clip: text;
             color: transparent;
@@ -79,25 +76,21 @@
             letter-spacing: 1.5px;
         }
 
-        /* --- 新增：工程圖示區塊 --- */
+        /* --- 工程圖示區塊 --- */
         .construction-icon-container {
             margin: 2rem auto;
             width: 100px;
             height: 100px;
-            /* 讓內部的 SVG 顏色跟隨這個設定 */
             color: var(--icon-color);
-            /* 添加緩慢旋轉動畫 */
             animation: spin-slow 10s linear infinite;
         }
         
-        /* SVG 樣式調整 */
         .construction-icon-container svg {
             width: 100%;
             height: 100%;
             filter: drop-shadow(0 4px 6px rgba(255, 152, 0, 0.3));
         }
 
-        /* 齒輪旋轉動畫 */
         @keyframes spin-slow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -118,29 +111,31 @@
             font-size: 1.05rem;
         }
         
-        /* 強調文字 */
         .highlight {
             color: var(--secondary-color);
             font-weight: bold;
         }
 
-        /* --- 聯絡按鈕 --- */
+        /* --- 連結按鈕 --- */
         .btn {
             display: inline-block;
             padding: 14px 35px;
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            /* 調整漸層色以搭配遊戲主題感 */
+            background: linear-gradient(to right, #e91e63, #9c27b0); 
             color: white;
             text-decoration: none;
             border-radius: 50px;
             transition: all 0.3s ease;
             font-weight: bold;
-            box-shadow: 0 8px 20px rgba(63, 81, 181, 0.3);
+            box-shadow: 0 8px 20px rgba(156, 39, 176, 0.3);
             letter-spacing: 1px;
+            font-size: 1.1rem; /* 字體稍微放大 */
         }
 
         .btn:hover {
             transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(63, 81, 181, 0.4);
+            box-shadow: 0 12px 25px rgba(156, 39, 176, 0.4);
+            background: linear-gradient(to right, #ff4081, #ba68c8);
         }
 
         /* --- 頁尾 --- */
@@ -176,13 +171,13 @@
                 系統核心升級中，精彩內容即將呈現。
             </p>
         </div>
-        
-        <a href="mailto:contact@example.com" class="btn">搶先聯繫我們</a>
+
+        <a href="TUSHEN21/index.html" class="btn">塗神水電王子 21點大賽</a>
 
         <footer>
             © 2025 Feng Xiong Tu Ge PR & Info. All Rights Reserved.
         </footer>
     </div>
 
-    </body>
+</body>
 </html>
