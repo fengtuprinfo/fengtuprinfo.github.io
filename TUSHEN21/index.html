@@ -2,10 +2,10 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>塗神水電王子 21點挑戰賽 (自訂圖片版)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>塗神水電王子 21點挑戰賽 (全裝置終極版)</title>
     <style>
-        /* 整體背景：深色工業風 */
+        /* --- 基礎設定 --- */
         body {
             font-family: 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
             background-color: #1a1a1a; 
@@ -17,65 +17,82 @@
             color: white;
             background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%);
             background-size: 20px 20px;
+            overscroll-behavior: none; /* 防止手機下拉重整 */
+            -webkit-tap-highlight-color: transparent; /* 移除點擊藍框 */
         }
 
-        /* 牌桌設計 */
+        /* --- 牌桌設計 (RWD核心) --- */
         .game-table {
-            background-color: #4a4a4a; /* 水泥灰 */
-            border: 15px solid #e67e22; /* 塗神橘 */
+            background-color: #4a4a4a;
+            border: 10px solid #e67e22; 
             border-radius: 20px;
-            padding: 30px; 
-            width: 800px;
-            box-shadow: 0 10px 40px rgba(230, 126, 34, 0.3); /* 橘色光暈 */
+            padding: 20px; 
+            width: 95%; 
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(230, 126, 34, 0.3);
             text-align: center;
             position: relative;
+            box-sizing: border-box;
+            transition: border-color 0.5s; /* 邊框顏色變化特效 */
         }
 
-        /* 標題特效 */
+        /* --- 標題優化：強制分行 --- */
         h1 { 
             margin-top: 0; 
             color: #f39c12;
             text-shadow: 2px 2px 0px #000;
-            font-size: 32px;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
+            font-size: 28px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
         
+        /* 在手機上把標題拆成兩行顯示 */
+        .title-part {
+            display: inline-block;
+        }
+
         .hand-area {
-            margin: 15px 0;
-            min-height: 160px;
+            margin: 10px 0;
+            min-height: 130px; 
             background: rgba(0,0,0,0.3);
             border-radius: 10px;
             padding: 10px;
             border: 1px solid #666;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
         }
         
         .cards-container {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
+            flex-wrap: wrap; 
+            gap: 5px;
+            margin-top: 8px;
+            width: 100%;
         }
 
-        /* 卡牌樣式 */
+        /* --- 卡牌樣式 --- */
         .card {
-            width: 80px;
-            height: 120px;
+            width: 75px;
+            height: 110px;
             background: white;
             border-radius: 8px;
             color: black;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 5px;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+            padding: 4px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
             font-weight: bold;
-            font-size: 20px;
+            font-size: 18px;
             position: relative;
             transition: transform 0.2s;
+            user-select: none;
         }
         
-        .card:hover { transform: translateY(-5px); }
         .card.red { color: #c0392b; }
         .card.black { color: #2c3e50; }
 
@@ -84,119 +101,248 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 40px;
+            font-size: 36px;
         }
 
-        /* 分數顯示板 */
+        /* --- 分數顯示 --- */
         .score-display {
-            font-size: 18px;
-            background: #e67e22; /* 橘底 */
+            font-size: 16px;
+            background: #e67e22;
             color: white;
-            display: inline-block;
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 50px;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             font-weight: bold;
+            white-space: nowrap; /* 防止分數換行 */
         }
 
-        .controls { margin-top: 20px; }
+        /* --- 訊息區 --- */
+        #message-area {
+            min-height: 50px; /* 增加高度容納多行文字 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #f1c40f;
+            text-shadow: 1px 1px 4px black;
+            padding: 0 5px;
+            line-height: 1.3; /* 增加行距 */
+        }
+
+        /* --- 按鈕區 --- */
+        .controls { 
+            margin-top: 10px; 
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
 
         button {
-            padding: 12px 30px;
+            padding: 12px 25px;
             font-size: 18px;
-            margin: 0 10px;
             cursor: pointer;
             border: none;
-            border-radius: 8px;
-            transition: all 0.1s;
+            border-radius: 10px; /* 圓角更明顯 */
             font-weight: bold;
             box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            touch-action: manipulation;
+            flex: 1;
+            min-width: 110px; 
+            max-width: 220px;
+            /* 解決 iPhone 按鈕樣式問題 */
+            -webkit-appearance: none; 
         }
         
         button:active { transform: translateY(4px); box-shadow: none; }
-        
-        /* 按鈕配色 */
         #btn-hit { background-color: #f39c12; color: #2c3e50; } 
         #btn-stand { background-color: #c0392b; color: white; } 
         #btn-new { background-color: #3498db; color: white; display: none; } 
 
-        #message-area {
-            height: 30px;
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 15px;
-            color: #f1c40f;
-            text-shadow: 1px 1px 4px black;
-        }
-
-        /* 塗神圖片區域 */
+        /* --- 塗神圖片區域 --- */
         #tushen-image-container {
-            margin-bottom: 15px;
-            height: 220px; 
+            margin-bottom: 10px;
+            height: 180px; 
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
+            z-index: 1; /* 確保在最上層 */
         }
 
         #tushen-image {
-            max-height: 100%;
+            height: 100%;
+            width: auto;
             max-width: 100%;
+            object-fit: contain;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: all 0.5s ease; 
-            border: 3px solid transparent;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+            transition: all 0.3s ease; 
         }
 
         .tushen-label {
             position: absolute;
-            bottom: -10px;
-            background: rgba(0, 0, 0, 0.8);
+            bottom: -15px;
+            background: rgba(0, 0, 0, 0.85);
             color: white;
-            padding: 5px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 16px;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
             white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 10;
         }
 
-        .icon { font-size: 24px; vertical-align: middle; margin-right: 5px; }
+        /* =========================================
+           📱 手機專用 (iPhone SE 2 / Galaxy A53 等)
+           寬度 < 600px
+           ========================================= */
+        @media (max-width: 600px) {
+            .game-table {
+                padding: 15px 8px; /* 減少左右內距 */
+                width: 96%;
+                border-width: 6px;
+            }
+
+            /* 標題強制換行 */
+            .title-part { display: block; }
+            h1 { font-size: 24px; margin-bottom: 5px; }
+
+            /* 卡牌再縮小一點以適應 iPhone SE */
+            .card {
+                width: 58px;
+                height: 88px;
+                font-size: 16px;
+                padding: 3px;
+            }
+            .suit-center { font-size: 26px; }
+
+            /* 按鈕變大，好按 */
+            button {
+                padding: 15px 0;
+                font-size: 20px;
+                width: 48%; /* 讓兩個按鈕並排且填滿 */
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            #message-area { font-size: 18px; min-height: 45px; }
+            #tushen-image-container { height: 140px; }
+        }
+
+        /* =========================================
+           📱 平板專用 (iPad 9 / Redmi Pad SE)
+           寬度 601px ~ 1024px
+           ========================================= */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .game-table {
+                width: 85%; /* 平板不需要太寬 */
+                padding: 30px;
+            }
+
+            h1 { font-size: 32px; }
+
+            /* 確保按鈕夠大，手指好點 */
+            button {
+                padding: 18px 40px;
+                font-size: 22px;
+            }
+
+            .card {
+                width: 85px; /* 平板卡牌大一點 */
+                height: 125px;
+                font-size: 22px;
+            }
+            
+            #tushen-image-container { height: 220px; }
+        }
+
+        /* =========================================
+           🔄 手機橫向模式 (高度矮)
+           ========================================= */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body { padding: 5px; align-items: flex-start; }
+            h1 { display: none; } /* 隱藏標題 */
+            
+            .game-table { 
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左右分欄 */
+                grid-template-rows: auto auto;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            /* 左邊放圖與控制 */
+            #left-panel { grid-column: 1; display: flex; flex-direction: column; justify-content: center; }
+            /* 右邊放牌局 */
+            #right-panel { grid-column: 2; }
+
+            #tushen-image-container { 
+                height: 100px; 
+                margin: 0;
+            }
+            .tushen-label { bottom: 0; font-size: 12px; padding: 2px 8px; }
+
+            .hand-area { min-height: 90px; padding: 5px; margin: 5px 0; }
+            .card { width: 45px; height: 70px; font-size: 14px; }
+            .suit-center { font-size: 20px; }
+            
+            #message-area { font-size: 16px; min-height: 25px; margin: 5px 0; }
+            
+            button { padding: 8px 15px; font-size: 16px; }
+        }
+
+        /* 隱藏的預載容器 */
+        #preload-area { display: none; width: 0; height: 0; overflow: hidden; }
     </style>
 </head>
 <body>
 
-<div class="game-table">
-    <h1>🛠️ 塗神水電王子 21點大賽 🚰</h1>
+<div id="preload-area"></div>
 
-    <div id="tushen-image-container">
-        <img id="tushen-image" src="TUSHENDRAW.png" alt="塗神水電王子">
-        <div id="tushen-label" class="tushen-label"></div>
-    </div>
+<div class="game-table" id="table-border">
+    <h1>
+        <span class="title-part">🛠️ 塗神水電王子</span>
+        <span class="title-part">21點挑戰賽 🚰</span>
+    </h1>
 
-    <div class="hand-area" style="background: rgba(230, 126, 34, 0.1);">
-        <div class="score-display">
-            <span class="icon">👷</span>塗神水電王子: <span id="dealer-score">0</span>
+    <div id="left-panel">
+        <div id="tushen-image-container">
+            <img id="tushen-image" src="TUSHENDRAW.png" alt="塗神水電王子">
+            <div id="tushen-label" class="tushen-label"></div>
         </div>
-        <div class="cards-container" id="dealer-cards"></div>
-    </div>
-
-    <div class="hand-area">
-        <div class="score-display">
-            <span class="icon">👤</span>您的點數: <span id="player-score">0</span>
+        
         </div>
-        <div class="cards-container" id="player-cards"></div>
+
+    <div id="right-panel">
+        <div class="hand-area" style="background: rgba(230, 126, 34, 0.1);">
+            <div class="score-display">
+                <span class="icon">👷</span>塗神: <span id="dealer-score">0</span>
+            </div>
+            <div class="cards-container" id="dealer-cards"></div>
+        </div>
+
+        <div class="hand-area">
+            <div class="score-display">
+                <span class="icon">👤</span>你: <span id="player-score">0</span>
+            </div>
+            <div class="cards-container" id="player-cards"></div>
+        </div>
     </div>
 
-    <div id="message-area">準備好挑戰塗神了嗎？按發牌開始！</div>
+    <div id="message-area">準備好挑戰了嗎？<br>按發牌開始！</div>
 
     <div class="controls">
         <button id="btn-new" onclick="startGame()" style="display:inline-block;">發牌</button>
-        <button id="btn-hit" onclick="hit()" style="display:none;">要牌 (Hit)</button>
-        <button id="btn-stand" onclick="stand()" style="display:none;">停牌 (Stand)</button>
+        <button id="btn-hit" onclick="hit()" style="display:none;">要牌</button>
+        <button id="btn-stand" onclick="stand()" style="display:none;">停牌</button>
     </div>
 </div>
 
@@ -209,19 +355,35 @@
     let dealerHand = [];
     let gameOver = false;
 
-    // 圖片資料庫 (已修改為您指定的檔名)
+    // 圖片設定
     const tushenImages = {
-        // normal: 遊戲剛開始的狀態，這裡暫時設定為平手圖，您也可以放一張專門的開場圖
-        normal: { src: "TUSHENDRAW.png", label: "", border: "transparent" }, 
-        // win: 塗神贏 (對應 TUSHENWIN.png)
-        win: { src: "TUSHENWIN.png", label: "塗神：哈哈！我贏啦！😎", border: "#e74c3c" }, 
-        // lose: 塗神輸 (對應 TUSHENLOSE.png)
-        lose: { src: "TUSHENLOSE.png", label: "塗神輸了...嗚嗚嗚 😢", border: "#2ecc71" }, 
-        // push: 平手 (對應 TUSHENDRAW.png)
-        push: { src: "TUSHENDRAW.png", label: "平手。再來一把？😐", border: "#95a5a6" } 
+        normal: { src: "TUSHENDRAW.png", label: "", color: "#e67e22" }, 
+        win: { src: "TUSHENWIN.png", label: "塗神：哈哈！我贏啦！😎", color: "#e74c3c" }, 
+        lose: { src: "TUSHENLOSE.png", label: "塗神：嗚嗚...怎麼輸了 😢", color: "#2ecc71" }, 
+        push: { src: "TUSHENDRAW.png", label: "平手！再來一把？😐", color: "#95a5a6" } 
     };
 
-    // 初始化牌組
+    // --- 關鍵修復：圖片預載功能 ---
+    // 手機版不會變圖通常是因為圖片還沒載入完，這個函式會強制瀏覽器先讀取圖片
+    function preloadImages() {
+        const preloadContainer = document.getElementById('preload-area');
+        const imagesToLoad = [
+            "TUSHENDRAW.png", 
+            "TUSHENWIN.png", 
+            "TUSHENLOSE.png"
+        ];
+        
+        imagesToLoad.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            preloadContainer.appendChild(img);
+        });
+        console.log("圖片預載啟動...");
+    }
+
+    // 頁面載入時執行預載
+    window.onload = preloadImages;
+
     function createDeck() {
         deck = [];
         for (let suit of suits) {
@@ -235,14 +397,12 @@
         }
     }
 
-    // 計算卡牌點數
     function getCardValue(card) {
         if (['J', 'Q', 'K'].includes(card.value)) return 10;
         if (card.value === 'A') return 11;
         return parseInt(card.value);
     }
 
-    // 計算手牌總分
     function calculateScore(hand) {
         let score = 0;
         let aceCount = 0;
@@ -257,27 +417,24 @@
         return score;
     }
 
-    // 渲染卡牌
     function renderCard(card, container, hidden = false) {
         const cardDiv = document.createElement('div');
         cardDiv.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`;
         
         if (hidden) {
-            // 牌背設計
             cardDiv.style.background = '#e67e22'; 
-            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 10px, #d35400 10px, #d35400 20px)';
+            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 5px, #d35400 5px, #d35400 10px)';
             cardDiv.style.border = '2px solid white';
         } else {
             cardDiv.innerHTML = `
-                <div style="text-align:left">${card.value}</div>
+                <div style="text-align:left; line-height: 1;">${card.value}</div>
                 <div class="suit-center">${card.suit}</div>
-                <div style="text-align:right">${card.value}</div>
+                <div style="text-align:right; line-height: 1;">${card.value}</div>
             `;
         }
         container.appendChild(cardDiv);
     }
 
-    // 更新介面
     function updateUI(showDealerHidden = false) {
         const dContainer = document.getElementById('dealer-cards');
         const pContainer = document.getElementById('player-cards');
@@ -298,9 +455,10 @@
         document.getElementById('dealer-score').innerText = showDealerHidden ? calculateScore(dealerHand) : "?";
     }
 
+    // 訊息區支援 HTML 標籤 (例如 <br>)
     function showMessage(msg, color = '#f1c40f') {
         const el = document.getElementById('message-area');
-        el.innerText = msg;
+        el.innerHTML = msg; // 改用 innerHTML 支援換行
         el.style.color = color;
     }
 
@@ -310,28 +468,32 @@
         document.getElementById('btn-stand').style.display = playing ? 'inline-block' : 'none';
     }
 
-    // 更新塗神圖片與標籤的函數
     function updateTushenImage(state) {
         const img = document.getElementById('tushen-image');
         const label = document.getElementById('tushen-label');
+        const tableBorder = document.getElementById('table-border'); // 取得整個桌子
         const data = tushenImages[state];
         
+        // 強制刷新 src (解決部分手機緩存不更新問題)
+        // 注意：如果圖片閃爍太嚴重，可以拿掉 ?t=... 部分
+        // 但為了確保手機切換，直接指派 src 通常即可，因為我們有 preload
         img.src = data.src;
-        img.style.borderColor = data.border;
+        
+        // 改變外框顏色加強視覺提示 (即使圖片沒跑出來，框顏色變了就知道輸贏)
+        tableBorder.style.borderColor = data.color; 
         
         if (state !== 'normal') {
             label.innerText = data.label;
             label.style.opacity = 1;
-            // 根據狀態改變標籤顏色
-            if (state === 'lose') label.style.background = 'rgba(46, 204, 113, 0.9)'; // 玩家贏(塗神輸)，綠色
-            else if (state === 'win') label.style.background = 'rgba(231, 76, 60, 0.9)'; // 玩家輸(塗神贏)，紅色
-            else label.style.background = 'rgba(149, 165, 166, 0.9)'; // 平手，灰色
+            // 根據輸贏改變標籤背景色
+            if (state === 'lose') label.style.background = 'rgba(46, 204, 113, 0.9)'; 
+            else if (state === 'win') label.style.background = 'rgba(231, 76, 60, 0.9)'; 
+            else label.style.background = 'rgba(149, 165, 166, 0.9)'; 
         } else {
             label.style.opacity = 0;
         }
     }
 
-    // 開始遊戲
     function startGame() {
         createDeck();
         playerHand = [deck.pop(), deck.pop()];
@@ -340,27 +502,24 @@
         
         updateUI(false);
         toggleButtons(true);
-        showMessage("塗神：放馬過來吧！(要牌/停牌)");
-        updateTushenImage('normal'); // 重置為原始圖片
+        showMessage("塗神：<br>放馬過來吧！"); // 使用 <br> 強制換行
+        updateTushenImage('normal'); 
 
         if (calculateScore(playerHand) === 21) {
             stand();
         }
     }
 
-    // 要牌
     function hit() {
         if (gameOver) return;
         playerHand.push(deck.pop());
         updateUI(false);
 
         if (calculateScore(playerHand) > 21) {
-            // 玩家爆牌，塗神贏
-            endGame("爆牌了！塗神獲勝！", '#e74c3c', 'win');
+            endGame("爆牌了！<br>塗神獲勝！", '#e74c3c', 'win');
         }
     }
 
-    // 停牌
     function stand() {
         if (gameOver) return;
         while (calculateScore(dealerHand) < 17) {
@@ -370,33 +529,27 @@
         determineWinner();
     }
 
-    // 判斷勝負
     function determineWinner() {
         const pScore = calculateScore(playerHand);
         const dScore = calculateScore(dealerHand);
 
         if (dScore > 21) {
-            // 莊家爆牌，塗神輸
-            endGame("塗神爆牌了！您贏了！ 🎉", '#2ecc71', 'lose');
+            endGame("塗神爆牌了！<br>您贏了！ 🎉", '#2ecc71', 'lose');
         } else if (pScore > dScore) {
-            // 玩家點數大，塗神輸
-            endGame("恭喜！戰勝了塗神！ 🏆", '#2ecc71', 'lose');
+            endGame("恭喜！<br>戰勝了塗神！ 🏆", '#2ecc71', 'lose');
         } else if (pScore < dScore) {
-            // 莊家點數大，塗神贏
-            endGame("塗神技高一籌，您輸了。 🔧", '#e74c3c', 'win');
+            endGame("塗神技高一籌，<br>您輸了。 🔧", '#e74c3c', 'win');
         } else {
-            // 平手
-            endGame("平局 (Push)！再來一把！", 'white', 'push');
+            endGame("平局 (Push)！<br>再來一把！", 'white', 'push');
         }
     }
 
-    // 結束遊戲
     function endGame(msg, color, imageState) {
         gameOver = true;
         showMessage(msg, color);
         toggleButtons(false);
         document.getElementById('btn-new').innerText = "再挑戰一次";
-        updateTushenImage(imageState); // 更新圖片狀態
+        updateTushenImage(imageState); 
     }
 </script>
 
