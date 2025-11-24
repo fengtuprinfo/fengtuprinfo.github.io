@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>塗神水電王子 21點挑戰賽 (多國語言版)</title>
+    <title>塗神水電王子 - 21點挑戰賽</title>
     <style>
         /* --- 基礎設定 --- */
         body {
@@ -24,8 +24,8 @@
         /* --- 語言切換選單 --- */
         .lang-container {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
             z-index: 100;
         }
 
@@ -33,11 +33,12 @@
             background: rgba(0, 0, 0, 0.8);
             color: #f39c12;
             border: 1px solid #f39c12;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 16px;
             outline: none;
             cursor: pointer;
+            font-weight: bold;
         }
 
         /* --- 牌桌設計 --- */
@@ -55,126 +56,23 @@
             transition: border-color 0.5s;
         }
 
+        /* 標題樣式 (位於頭像上方) */
         h1 { 
             margin-top: 0; 
             color: #f39c12;
             text-shadow: 2px 2px 0px #000;
-            font-size: 28px;
+            font-size: 32px;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
         
-        .title-part { display: inline-block; }
+        .title-sub { font-size: 0.8em; color: #ecf0f1; }
 
-        .hand-area {
-            margin: 10px 0;
-            min-height: 130px; 
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 10px;
-            border: 1px solid #666;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
-        
-        .cards-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap; 
-            gap: 5px;
-            margin-top: 8px;
-            width: 100%;
-        }
-
-        .card {
-            width: 75px;
-            height: 110px;
-            background: white;
-            border-radius: 8px;
-            color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 4px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-            font-weight: bold;
-            font-size: 18px;
-            position: relative;
-            transition: transform 0.2s;
-            user-select: none;
-        }
-        
-        .card.red { color: #c0392b; }
-        .card.black { color: #2c3e50; }
-
-        .suit-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 36px;
-        }
-
-        .score-display {
-            font-size: 16px;
-            background: #e67e22;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 50px;
-            margin-bottom: 2px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        #message-area {
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            margin: 10px 0;
-            color: #f1c40f;
-            text-shadow: 1px 1px 4px black;
-            padding: 0 5px;
-            line-height: 1.3;
-        }
-
-        .controls { 
-            margin-top: 10px; 
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 12px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-            touch-action: manipulation;
-            flex: 1;
-            min-width: 110px; 
-            max-width: 220px;
-            -webkit-appearance: none; 
-        }
-        
-        button:active { transform: translateY(4px); box-shadow: none; }
-        #btn-hit { background-color: #f39c12; color: #2c3e50; } 
-        #btn-stand { background-color: #c0392b; color: white; } 
-        #btn-new { background-color: #3498db; color: white; display: none; } 
-
+        /* 頭像區域 */
         #tushen-image-container {
-            margin-bottom: 10px;
-            height: 180px; 
+            margin: 0 auto 15px auto;
+            height: 160px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -189,69 +87,154 @@
             object-fit: contain;
             border-radius: 10px;
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
-            transition: all 0.3s ease; 
+            border: 2px solid #fff;
         }
 
-        .tushen-label {
+        .tushen-speech {
             position: absolute;
-            bottom: -15px;
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            bottom: -10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #f1c40f;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
             font-weight: bold;
-            font-size: 16px;
+            border: 1px solid #f39c12;
+            white-space: nowrap;
             opacity: 0;
             transition: opacity 0.3s;
-            pointer-events: none;
-            white-space: nowrap;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 10;
         }
 
-        @media (max-width: 600px) {
-            .game-table { padding: 15px 8px; width: 96%; border-width: 6px; }
-            .title-part { display: block; }
-            h1 { font-size: 24px; margin-bottom: 5px; }
-            .card { width: 58px; height: 88px; font-size: 16px; padding: 3px; }
-            .suit-center { font-size: 26px; }
-            button { padding: 15px 0; font-size: 20px; width: 48%; min-width: auto; margin-bottom: 5px; }
-            #message-area { font-size: 18px; min-height: 45px; }
-            #tushen-image-container { height: 140px; }
-            .lang-container { top: 5px; right: 5px; } /* 手機版調整位置 */
+        /* 牌區容器 (把手) */
+        .hand-area {
+            margin: 20px 0 15px 0;
+            min-height: 130px; 
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #666;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
         }
 
-        @media (min-width: 601px) and (max-width: 1024px) {
-            .game-table { width: 85%; padding: 30px; }
-            h1 { font-size: 32px; }
-            button { padding: 18px 40px; font-size: 22px; }
-            .card { width: 85px; height: 125px; font-size: 22px; }
-            #tushen-image-container { height: 220px; }
+        /* 莊家/玩家名稱標籤 (位於把手上方) */
+        .name-label {
+            position: absolute;
+            top: -14px; /* 向上突出 */
+            left: 20px;
+            background: #e67e22;
+            color: white;
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            z-index: 5;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .name-label.player { background: #3498db; }
+
+        .score-display {
+            font-size: 16px;
+            color: #f39c12;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
         }
 
-        @media (max-height: 500px) and (orientation: landscape) {
-            body { padding: 5px; align-items: flex-start; }
-            h1 { display: none; }
-            .game-table { 
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto auto;
-                gap: 10px;
-                padding: 10px;
-            }
-            #left-panel { grid-column: 1; display: flex; flex-direction: column; justify-content: center; }
-            #right-panel { grid-column: 2; }
-            #tushen-image-container { height: 100px; margin: 0; }
-            .tushen-label { bottom: 0; font-size: 12px; padding: 2px 8px; }
-            .hand-area { min-height: 90px; padding: 5px; margin: 5px 0; }
-            .card { width: 45px; height: 70px; font-size: 14px; }
-            .suit-center { font-size: 20px; }
-            #message-area { font-size: 16px; min-height: 25px; margin: 5px 0; }
-            button { padding: 8px 15px; font-size: 16px; }
-            .lang-container { position: fixed; top: 5px; right: 5px; }
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; 
+            gap: 5px;
+            width: 100%;
+            margin-top: 5px;
         }
+
+        /* --- 卡牌樣式 --- */
+        .card {
+            width: 70px;
+            height: 100px;
+            background: white;
+            border-radius: 6px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            user-select: none;
+        }
+        
+        .card.red { color: #c0392b; }
+        .card.black { color: #2c3e50; }
+
+        .suit-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+        }
+
+        #message-area {
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #f1c40f;
+            text-shadow: 1px 1px 4px black;
+            line-height: 1.3;
+        }
+
+        .controls { 
+            margin-top: 10px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            flex: 1;
+            min-width: 100px; 
+            max-width: 200px;
+        }
+        
+        button:active { transform: translateY(4px); box-shadow: none; }
+        #btn-hit { background-color: #f39c12; color: #2c3e50; } 
+        #btn-stand { background-color: #c0392b; color: white; } 
+        #btn-new { background-color: #3498db; color: white; display: none; } 
 
         #preload-area { display: none; width: 0; height: 0; overflow: hidden; }
+
+        /* RWD */
+        @media (max-width: 600px) {
+            .game-table { padding: 15px 8px; width: 98%; }
+            h1 { font-size: 24px; margin-bottom: 10px; }
+            .card { width: 55px; height: 80px; font-size: 16px; }
+            .suit-center { font-size: 24px; }
+            button { padding: 12px 0; font-size: 16px; }
+            #tushen-image-container { height: 120px; }
+        }
     </style>
 </head>
 <body>
@@ -269,34 +252,32 @@
 
 <div class="game-table" id="table-border">
     <h1>
-        <span class="title-part" data-i18n="title_1">🛠️ 塗神水電王子</span>
-        <span class="title-part" data-i18n="title_2">21點挑戰賽 🚰</span>
+        <div data-i18n="title_main">塗神水電王子</div>
+        <div class="title-sub" data-i18n="title_sub">21點挑戰賽</div>
     </h1>
 
-    <div id="left-panel">
-        <div id="tushen-image-container">
-            <img id="tushen-image" src="TUSHENDRAW.png" alt="Tu Shen">
-            <div id="tushen-label" class="tushen-label"></div>
-        </div>
+    <div id="tushen-image-container">
+        <img id="tushen-image" src="TUSHENDRAW.png" alt="Tu Shen">
+        <div id="tushen-label" class="tushen-speech"></div>
     </div>
 
-    <div id="right-panel">
-        <div class="hand-area" style="background: rgba(230, 126, 34, 0.1);">
-            <div class="score-display">
-                <span class="icon">👷</span><span data-i18n="dealer_name">塗神</span>: <span id="dealer-score">0</span>
-            </div>
-            <div class="cards-container" id="dealer-cards"></div>
+    <div class="hand-area" style="background: rgba(230, 126, 34, 0.1);">
+        <div class="name-label" data-i18n="dealer_name">塗三傑</div>
+        <div class="score-display">
+            <span data-i18n="text_score">分數</span>: <span id="dealer-score">0</span>
         </div>
-
-        <div class="hand-area">
-            <div class="score-display">
-                <span class="icon">👤</span><span data-i18n="player_name">你</span>: <span id="player-score">0</span>
-            </div>
-            <div class="cards-container" id="player-cards"></div>
-        </div>
+        <div class="cards-container" id="dealer-cards"></div>
     </div>
 
-    <div id="message-area" data-i18n="msg_welcome">準備好挑戰了嗎？<br>按發牌開始！</div>
+    <div class="hand-area">
+        <div class="name-label player" data-i18n="player_name">你</div>
+        <div class="score-display">
+            <span data-i18n="text_score">分數</span>: <span id="player-score">0</span>
+        </div>
+        <div class="cards-container" id="player-cards"></div>
+    </div>
+
+    <div id="message-area" data-i18n="msg_welcome">準備好挑戰了嗎？</div>
 
     <div class="controls">
         <button id="btn-new" onclick="startGame()" style="display:inline-block;" data-i18n="btn_deal">發牌</button>
@@ -306,132 +287,137 @@
 </div>
 
 <script>
-    // --- 多國語言設定 ---
+    // --- 1. 多國語言字典檔 ---
     let currentLang = 'zh-TW';
+    let currentMsgKey = 'msg_welcome';
 
     const translations = {
         'zh-TW': {
-            title_1: '🛠️ 塗神水電王子',
-            title_2: '21點挑戰賽 🚰',
-            dealer_name: '塗神',
+            title_main: '塗神水電王子',
+            title_sub: '21點挑戰賽 🚰',
+            dealer_name: '塗三傑', 
             player_name: '你',
+            text_score: '分數',
             btn_deal: '發牌',
             btn_play_again: '再挑戰一次',
             btn_hit: '要牌',
             btn_stand: '停牌',
             msg_welcome: '準備好挑戰了嗎？<br>按發牌開始！',
-            msg_start: '塗神：<br>放馬過來吧！',
-            msg_bust_player: '爆牌了！<br>塗神獲勝！',
-            msg_bust_dealer: '塗神爆牌了！<br>您贏了！ 🎉',
-            msg_win: '恭喜！<br>戰勝了塗神！ 🏆',
-            msg_lose: '塗神技高一籌，<br>您輸了。 🔧',
-            msg_push: '平局 (Push)！<br>再來一把！',
-            label_win: '塗神：哈哈！我贏啦！😎',
-            label_lose: '塗神：嗚嗚...怎麼輸了 😢',
+            msg_start: '塗三傑：<br>放馬過來吧！',
+            msg_bust_player: '爆牌了！<br>塗三傑獲勝！',
+            msg_bust_dealer: '塗三傑爆牌了！<br>您贏了！ 🎉',
+            msg_win: '恭喜！<br>戰勝了塗三傑！ 🏆',
+            msg_lose: '塗三傑技高一籌，<br>您輸了。 🔧',
+            msg_push: '平局！<br>再來一把！',
+            label_win: '塗三傑：哈哈！我贏啦！😎',
+            label_lose: '塗三傑：嗚嗚...怎麼輸了 😢',
             label_push: '平手！再來一把？😐'
         },
         'zh-CN': {
-            title_1: '🛠️ 涂神水电王子',
-            title_2: '21点挑战赛 🚰',
-            dealer_name: '涂神',
+            title_main: '涂神水电王子',
+            title_sub: '21点挑战赛 🚰',
+            dealer_name: '涂三杰', 
             player_name: '你',
+            text_score: '分数',
             btn_deal: '发牌',
             btn_play_again: '再来一局',
             btn_hit: '要牌',
             btn_stand: '停牌',
             msg_welcome: '准备好挑战了吗？<br>按发牌开始！',
-            msg_start: '涂神：<br>放马过来吧！',
-            msg_bust_player: '爆牌了！<br>涂神获胜！',
-            msg_bust_dealer: '涂神爆牌了！<br>您赢了！ 🎉',
-            msg_win: '恭喜！<br>战胜了涂神！ 🏆',
-            msg_lose: '涂神技高一筹，<br>您输了。 🔧',
-            msg_push: '平局 (Push)！<br>再来一把！',
-            label_win: '涂神：哈哈！我赢啦！😎',
-            label_lose: '涂神：呜呜...怎么输了 😢',
+            msg_start: '涂三杰：<br>放马过来吧！',
+            msg_bust_player: '爆牌了！<br>涂三杰获胜！',
+            msg_bust_dealer: '涂三杰爆牌了！<br>您赢了！ 🎉',
+            msg_win: '恭喜！<br>战胜了涂三杰！ 🏆',
+            msg_lose: '涂三杰技高一筹，<br>您输了。 🔧',
+            msg_push: '平局！<br>再来一把！',
+            label_win: '涂三杰：哈哈！我赢啦！😎',
+            label_lose: '涂三杰：呜呜...怎么输了 😢',
             label_push: '平手！再来一把？😐'
         },
         'en': {
-            title_1: '🛠️ Tu Shen Plumbing',
-            title_2: 'Blackjack 🚰',
-            dealer_name: 'Tu Shen',
+            title_main: 'Plumber Prince Tu Shen', 
+            title_sub: 'Blackjack 🚰',
+            dealer_name: 'Truman III', 
             player_name: 'You',
+            text_score: 'Score',
             btn_deal: 'Deal',
             btn_play_again: 'Play Again',
             btn_hit: 'Hit',
             btn_stand: 'Stand',
-            msg_welcome: 'Ready to play?<br>Press Deal to start!',
-            msg_start: 'Tu Shen:<br>Bring it on!',
-            msg_bust_player: 'Bust!<br>Tu Shen Wins!',
+            msg_welcome: 'Ready to play?<br>Press Deal!',
+            msg_start: 'Truman III:<br>Bring it on!',
+            msg_bust_player: 'Bust!<br>Truman III Wins!',
             msg_bust_dealer: 'Dealer Bust!<br>You Win! 🎉',
-            msg_win: 'Congratulations!<br>You beat Tu Shen! 🏆',
-            msg_lose: 'Tu Shen wins,<br>Better luck next time. 🔧',
+            msg_win: 'Congratulations!<br>You won! 🏆',
+            msg_lose: 'Truman III wins,<br>Better luck next time. 🔧',
             msg_push: 'Push!<br>Try again!',
-            label_win: 'Tu Shen: Hahaha! I Win! 😎',
-            label_lose: 'Tu Shen: Nooo... I lost 😢',
+            label_win: 'Truman III: Hahaha! I Win! 😎',
+            label_lose: 'Truman III: Nooo... I lost 😢',
             label_push: 'Draw! One more game? 😐'
         },
         'ja': {
-            title_1: '🛠️ 塗神水道王子',
-            title_2: 'BJ チャレンジ 🚰',
-            dealer_name: '塗神',
+            title_main: '配管王子塗神', 
+            title_sub: 'BJ チャレンジ 🚰',
+            dealer_name: '筒書三郎', 
             player_name: 'あなた',
+            text_score: '点数',
             btn_deal: '配る',
             btn_play_again: 'もう一度',
             btn_hit: 'ヒット',
             btn_stand: 'スタンド',
             msg_welcome: '準備はいい？<br>「配る」を押して！',
-            msg_start: '塗神：<br>かかってこい！',
-            msg_bust_player: 'バスト！<br>塗神の勝ち！',
-            msg_bust_dealer: '塗神バスト！<br>君の勝ち！ 🎉',
-            msg_win: 'おめでとう！<br>塗神に勝った！ 🏆',
+            msg_start: '筒書三郎：<br>かかってこい！',
+            msg_bust_player: 'バスト！<br>筒書三郎の勝ち！',
+            msg_bust_dealer: '筒書三郎バスト！<br>君の勝ち！ 🎉',
+            msg_win: 'おめでとう！<br>筒書三郎に勝った！ 🏆',
             msg_lose: '残念、<br>君の負けだ。 🔧',
             msg_push: '引き分け！<br>もう一回？',
-            label_win: '塗神：ハハ！僕の勝ちだ！😎',
-            label_lose: '塗神：うぅ...負けちゃった 😢',
+            label_win: '筒書：ハハ！僕の勝ちだ！😎',
+            label_lose: '筒書：うぅ...負けちゃった 😢',
             label_push: '引き分け！もう一回？😐'
         }
     };
 
-    // 取得翻譯文字輔助函式
     function t(key) {
         return translations[currentLang][key] || key;
     }
 
-    // 切換語言
+    // --- 2. 語言切換邏輯 ---
     function changeLanguage() {
         const select = document.getElementById('lang-select');
         currentLang = select.value;
 
-        // 更新靜態文字
+        // 更新所有有 data-i18n 的元素
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            // 如果是按鈕且正在遊戲結束狀態，可能需要保持 "Play Again" 狀態
-            if(el.id === 'btn-new' && gameOver) {
-                el.innerHTML = t('btn_play_again');
+            if (el.id === 'btn-new') {
+                el.innerHTML = gameOver ? t('btn_play_again') : t('btn_deal');
             } else {
                 el.innerHTML = t(key);
             }
         });
 
-        // 如果目前顯示有文字訊息，嘗試更新 (只針對幾個主要狀態)
-        // 這裡簡單處理：如果是初始狀態，更新歡迎詞
-        const msgArea = document.getElementById('message-area');
-        if(!gameOver && deck.length === 0) {
-            msgArea.innerHTML = t('msg_welcome');
+        if (currentMsgKey) {
+            document.getElementById('message-area').innerHTML = t(currentMsgKey);
+        }
+
+        const label = document.getElementById('tushen-label');
+        if (label.style.opacity === '1') {
+             updateTushenImage(currentImageState);
         }
     }
 
-    // --- 遊戲核心變數 ---
+    // --- 3. 遊戲核心變數與圖片 (PNG) ---
     const suits = ['♠', '♥', '♦', '♣'];
     const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     let deck = [];
     let playerHand = [];
     let dealerHand = [];
     let gameOver = false;
+    let currentImageState = 'normal';
 
-    // 圖片設定 (Label 現在是動態抓取的 Key)
     const tushenImages = {
-        normal: { src: "TUSHENDRAW.png", labelKey: "", color: "#e67e22" }, 
+        normal: { src: "TUSHENDRAW.png", labelKey: "label_push", color: "#e67e22" },
         win: { src: "TUSHENWIN.png", labelKey: "label_win", color: "#e74c3c" }, 
         lose: { src: "TUSHENLOSE.png", labelKey: "label_lose", color: "#2ecc71" }, 
         push: { src: "TUSHENDRAW.png", labelKey: "label_push", color: "#95a5a6" } 
@@ -445,11 +431,11 @@
             img.src = src;
             preloadContainer.appendChild(img);
         });
-        console.log("圖片預載啟動...");
     }
 
     window.onload = preloadImages;
 
+    // --- 4. 遊戲邏輯 ---
     function createDeck() {
         deck = [];
         for (let suit of suits) {
@@ -488,8 +474,8 @@
         cardDiv.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`;
         
         if (hidden) {
-            cardDiv.style.background = '#e67e22'; 
-            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 5px, #d35400 5px, #d35400 10px)';
+            cardDiv.style.background = '#d35400'; 
+            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, #d35400, #d35400 10px, #e67e22 10px, #e67e22 20px)';
             cardDiv.style.border = '2px solid white';
         } else {
             cardDiv.innerHTML = `
@@ -518,12 +504,20 @@
         playerHand.forEach(card => renderCard(card, pContainer));
 
         document.getElementById('player-score').innerText = calculateScore(playerHand);
-        document.getElementById('dealer-score').innerText = showDealerHidden ? calculateScore(dealerHand) : "?";
+        
+        const dealerScoreEl = document.getElementById('dealer-score');
+        if (dealerHand.length === 0) {
+            dealerScoreEl.innerText = "0"; 
+        } else if (showDealerHidden) {
+            dealerScoreEl.innerText = calculateScore(dealerHand); 
+        } else {
+            dealerScoreEl.innerText = "?"; 
+        }
     }
 
     function showMessage(msgKey, color = '#f1c40f') {
         const el = document.getElementById('message-area');
-        // 使用 t() 函式翻譯
+        currentMsgKey = msgKey;
         el.innerHTML = t(msgKey); 
         el.style.color = color;
     }
@@ -534,32 +528,33 @@
         document.getElementById('btn-hit').style.display = playing ? 'inline-block' : 'none';
         document.getElementById('btn-stand').style.display = playing ? 'inline-block' : 'none';
 
-        // 更新按鈕文字 (特別是 "再挑戰一次" 與 "發牌")
         if (!playing) {
             btnNew.innerText = gameOver ? t('btn_play_again') : t('btn_deal');
         }
     }
 
     function updateTushenImage(state) {
+        currentImageState = state;
         const img = document.getElementById('tushen-image');
         const label = document.getElementById('tushen-label');
-        const tableBorder = document.getElementById('table-border'); 
+        const tableBorder = document.getElementById('table-border');
         const data = tushenImages[state];
         
         img.src = data.src;
-        tableBorder.style.borderColor = data.color; 
+        tableBorder.style.borderColor = data.color;
         
         if (state !== 'normal') {
-            label.innerText = t(data.labelKey); // 翻譯 Label
+            label.innerText = t(data.labelKey);
             label.style.opacity = 1;
-            if (state === 'lose') label.style.background = 'rgba(46, 204, 113, 0.9)'; 
-            else if (state === 'win') label.style.background = 'rgba(231, 76, 60, 0.9)'; 
-            else label.style.background = 'rgba(149, 165, 166, 0.9)'; 
+            if (state === 'lose') label.style.borderColor = '#2ecc71'; 
+            else if (state === 'win') label.style.borderColor = '#e74c3c';
+            else label.style.borderColor = '#95a5a6';
         } else {
             label.style.opacity = 0;
         }
     }
 
+    // --- 5. 流程控制 ---
     function startGame() {
         createDeck();
         playerHand = [deck.pop(), deck.pop()];
@@ -568,7 +563,7 @@
         
         updateUI(false);
         toggleButtons(true);
-        showMessage("msg_start"); // 傳遞 Key
+        showMessage("msg_start"); 
         updateTushenImage('normal'); 
 
         if (calculateScore(playerHand) === 21) {
@@ -579,10 +574,13 @@
     function hit() {
         if (gameOver) return;
         playerHand.push(deck.pop());
-        updateUI(false);
-
+        
+        // 檢查是否爆牌
         if (calculateScore(playerHand) > 21) {
+            updateUI(true); // 爆牌時強制翻開莊家牌
             endGame("msg_bust_player", '#e74c3c', 'win');
+        } else {
+            updateUI(false); // 沒爆牌，維持蓋牌
         }
     }
 
@@ -614,8 +612,6 @@
         gameOver = true;
         showMessage(msgKey, color);
         toggleButtons(false);
-        // 按鈕文字會在 toggleButtons 內處理，或者這裡強制更新
-        document.getElementById('btn-new').innerText = t('btn_play_again');
         updateTushenImage(imageState); 
     }
 </script>
