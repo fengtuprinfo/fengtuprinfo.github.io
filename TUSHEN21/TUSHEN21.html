@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塗神水電王子 21點挑戰賽 (自訂圖片版)</title>
+    <style>
+        /* 整體背景：深色工業風 */
+        body {
+            font-family: 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #1a1a1a; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%);
+            background-size: 20px 20px;
+        }
+
+        /* 牌桌設計 */
+        .game-table {
+            background-color: #4a4a4a; /* 水泥灰 */
+            border: 15px solid #e67e22; /* 塗神橘 */
+            border-radius: 20px;
+            padding: 30px; 
+            width: 800px;
+            box-shadow: 0 10px 40px rgba(230, 126, 34, 0.3); /* 橘色光暈 */
+            text-align: center;
+            position: relative;
+        }
+
+        /* 標題特效 */
+        h1 { 
+            margin-top: 0; 
+            color: #f39c12;
+            text-shadow: 2px 2px 0px #000;
+            font-size: 32px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .hand-area {
+            margin: 15px 0;
+            min-height: 160px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #666;
+        }
+        
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        /* 卡牌樣式 */
+        .card {
+            width: 80px;
+            height: 120px;
+            background: white;
+            border-radius: 8px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 5px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+            font-weight: bold;
+            font-size: 20px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover { transform: translateY(-5px); }
+        .card.red { color: #c0392b; }
+        .card.black { color: #2c3e50; }
+
+        .suit-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+        }
+
+        /* 分數顯示板 */
+        .score-display {
+            font-size: 18px;
+            background: #e67e22; /* 橘底 */
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            font-weight: bold;
+        }
+
+        .controls { margin-top: 20px; }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            margin: 0 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.1s;
+            font-weight: bold;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+        }
+        
+        button:active { transform: translateY(4px); box-shadow: none; }
+        
+        /* 按鈕配色 */
+        #btn-hit { background-color: #f39c12; color: #2c3e50; } 
+        #btn-stand { background-color: #c0392b; color: white; } 
+        #btn-new { background-color: #3498db; color: white; display: none; } 
+
+        #message-area {
+            height: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #f1c40f;
+            text-shadow: 1px 1px 4px black;
+        }
+
+        /* 塗神圖片區域 */
+        #tushen-image-container {
+            margin-bottom: 15px;
+            height: 220px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #tushen-image {
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.5s ease; 
+            border: 3px solid transparent;
+        }
+
+        .tushen-label {
+            position: absolute;
+            bottom: -10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .icon { font-size: 24px; vertical-align: middle; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="game-table">
+    <h1>🛠️ 塗神水電王子 21點大賽 🚰</h1>
+
+    <div id="tushen-image-container">
+        <img id="tushen-image" src="TUSHENDRAW.png" alt="塗神水電王子">
+        <div id="tushen-label" class="tushen-label"></div>
+    </div>
+
+    <div class="hand-area" style="background: rgba(230, 126, 34, 0.1);">
+        <div class="score-display">
+            <span class="icon">👷</span>塗神水電王子: <span id="dealer-score">0</span>
+        </div>
+        <div class="cards-container" id="dealer-cards"></div>
+    </div>
+
+    <div class="hand-area">
+        <div class="score-display">
+            <span class="icon">👤</span>您的點數: <span id="player-score">0</span>
+        </div>
+        <div class="cards-container" id="player-cards"></div>
+    </div>
+
+    <div id="message-area">準備好挑戰塗神了嗎？按發牌開始！</div>
+
+    <div class="controls">
+        <button id="btn-new" onclick="startGame()" style="display:inline-block;">發牌</button>
+        <button id="btn-hit" onclick="hit()" style="display:none;">要牌 (Hit)</button>
+        <button id="btn-stand" onclick="stand()" style="display:none;">停牌 (Stand)</button>
+    </div>
+</div>
+
+<script>
+    // 遊戲變數
+    const suits = ['♠', '♥', '♦', '♣'];
+    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    let deck = [];
+    let playerHand = [];
+    let dealerHand = [];
+    let gameOver = false;
+
+    // 圖片資料庫 (已修改為您指定的檔名)
+    const tushenImages = {
+        // normal: 遊戲剛開始的狀態，這裡暫時設定為平手圖，您也可以放一張專門的開場圖
+        normal: { src: "TUSHENDRAW.png", label: "", border: "transparent" }, 
+        // win: 塗神贏 (對應 TUSHENWIN.png)
+        win: { src: "TUSHENWIN.png", label: "塗神：哈哈！我贏啦！😎", border: "#e74c3c" }, 
+        // lose: 塗神輸 (對應 TUSHENLOSE.png)
+        lose: { src: "TUSHENLOSE.png", label: "塗神輸了...嗚嗚嗚 😢", border: "#2ecc71" }, 
+        // push: 平手 (對應 TUSHENDRAW.png)
+        push: { src: "TUSHENDRAW.png", label: "平手。再來一把？😐", border: "#95a5a6" } 
+    };
+
+    // 初始化牌組
+    function createDeck() {
+        deck = [];
+        for (let suit of suits) {
+            for (let value of values) {
+                deck.push({ suit, value });
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+    }
+
+    // 計算卡牌點數
+    function getCardValue(card) {
+        if (['J', 'Q', 'K'].includes(card.value)) return 10;
+        if (card.value === 'A') return 11;
+        return parseInt(card.value);
+    }
+
+    // 計算手牌總分
+    function calculateScore(hand) {
+        let score = 0;
+        let aceCount = 0;
+        for (let card of hand) {
+            score += getCardValue(card);
+            if (card.value === 'A') aceCount++;
+        }
+        while (score > 21 && aceCount > 0) {
+            score -= 10;
+            aceCount--;
+        }
+        return score;
+    }
+
+    // 渲染卡牌
+    function renderCard(card, container, hidden = false) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`;
+        
+        if (hidden) {
+            // 牌背設計
+            cardDiv.style.background = '#e67e22'; 
+            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 10px, #d35400 10px, #d35400 20px)';
+            cardDiv.style.border = '2px solid white';
+        } else {
+            cardDiv.innerHTML = `
+                <div style="text-align:left">${card.value}</div>
+                <div class="suit-center">${card.suit}</div>
+                <div style="text-align:right">${card.value}</div>
+            `;
+        }
+        container.appendChild(cardDiv);
+    }
+
+    // 更新介面
+    function updateUI(showDealerHidden = false) {
+        const dContainer = document.getElementById('dealer-cards');
+        const pContainer = document.getElementById('player-cards');
+        dContainer.innerHTML = '';
+        pContainer.innerHTML = '';
+
+        dealerHand.forEach((card, index) => {
+            if (index === 0 && !showDealerHidden) {
+                renderCard(card, dContainer, true);
+            } else {
+                renderCard(card, dContainer);
+            }
+        });
+
+        playerHand.forEach(card => renderCard(card, pContainer));
+
+        document.getElementById('player-score').innerText = calculateScore(playerHand);
+        document.getElementById('dealer-score').innerText = showDealerHidden ? calculateScore(dealerHand) : "?";
+    }
+
+    function showMessage(msg, color = '#f1c40f') {
+        const el = document.getElementById('message-area');
+        el.innerText = msg;
+        el.style.color = color;
+    }
+
+    function toggleButtons(playing) {
+        document.getElementById('btn-new').style.display = playing ? 'none' : 'inline-block';
+        document.getElementById('btn-hit').style.display = playing ? 'inline-block' : 'none';
+        document.getElementById('btn-stand').style.display = playing ? 'inline-block' : 'none';
+    }
+
+    // 更新塗神圖片與標籤的函數
+    function updateTushenImage(state) {
+        const img = document.getElementById('tushen-image');
+        const label = document.getElementById('tushen-label');
+        const data = tushenImages[state];
+        
+        img.src = data.src;
+        img.style.borderColor = data.border;
+        
+        if (state !== 'normal') {
+            label.innerText = data.label;
+            label.style.opacity = 1;
+            // 根據狀態改變標籤顏色
+            if (state === 'lose') label.style.background = 'rgba(46, 204, 113, 0.9)'; // 玩家贏(塗神輸)，綠色
+            else if (state === 'win') label.style.background = 'rgba(231, 76, 60, 0.9)'; // 玩家輸(塗神贏)，紅色
+            else label.style.background = 'rgba(149, 165, 166, 0.9)'; // 平手，灰色
+        } else {
+            label.style.opacity = 0;
+        }
+    }
+
+    // 開始遊戲
+    function startGame() {
+        createDeck();
+        playerHand = [deck.pop(), deck.pop()];
+        dealerHand = [deck.pop(), deck.pop()];
+        gameOver = false;
+        
+        updateUI(false);
+        toggleButtons(true);
+        showMessage("塗神：放馬過來吧！(要牌/停牌)");
+        updateTushenImage('normal'); // 重置為原始圖片
+
+        if (calculateScore(playerHand) === 21) {
+            stand();
+        }
+    }
+
+    // 要牌
+    function hit() {
+        if (gameOver) return;
+        playerHand.push(deck.pop());
+        updateUI(false);
+
+        if (calculateScore(playerHand) > 21) {
+            // 玩家爆牌，塗神贏
+            endGame("爆牌了！塗神獲勝！", '#e74c3c', 'win');
+        }
+    }
+
+    // 停牌
+    function stand() {
+        if (gameOver) return;
+        while (calculateScore(dealerHand) < 17) {
+            dealerHand.push(deck.pop());
+        }
+        updateUI(true);
+        determineWinner();
+    }
+
+    // 判斷勝負
+    function determineWinner() {
+        const pScore = calculateScore(playerHand);
+        const dScore = calculateScore(dealerHand);
+
+        if (dScore > 21) {
+            // 莊家爆牌，塗神輸
+            endGame("塗神爆牌了！您贏了！ 🎉", '#2ecc71', 'lose');
+        } else if (pScore > dScore) {
+            // 玩家點數大，塗神輸
+            endGame("恭喜！戰勝了塗神！ 🏆", '#2ecc71', 'lose');
+        } else if (pScore < dScore) {
+            // 莊家點數大，塗神贏
+            endGame("塗神技高一籌，您輸了。 🔧", '#e74c3c', 'win');
+        } else {
+            // 平手
+            endGame("平局 (Push)！再來一把！", 'white', 'push');
+        }
+    }
+
+    // 結束遊戲
+    function endGame(msg, color, imageState) {
+        gameOver = true;
+        showMessage(msg, color);
+        toggleButtons(false);
+        document.getElementById('btn-new').innerText = "再挑戰一次";
+        updateTushenImage(imageState); // 更新圖片狀態
+    }
+</script>
+
+</body>
+</html>

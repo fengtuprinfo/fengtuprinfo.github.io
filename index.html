@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鋒兄塗哥公關資訊 | 網站建置中</title>
+    <style>
+        /* --- 全域設定 --- */
+        :root {
+            --primary-color: #00bcd4; /* 科技藍 */
+            --secondary-color: #3f51b5; /* 深邃藍 */
+            --icon-color: #ff9800; /* 工程橘，用於圖示突顯 */
+            --text-color: #333;
+            /* 背景維持動態漸層 */
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            --card-bg: rgba(255, 255, 255, 0.96);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+        }
+
+        /* 背景流動動畫 */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 主卡片容器 --- */
+        .container {
+            background: var(--card-bg);
+            padding: 3.5rem 3rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 550px;
+            width: 90%;
+            position: relative;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* --- Logo 區塊 --- */
+        .logo-area {
+            margin-bottom: 25px;
+        }
+        
+        .logo-text {
+            font-size: 2.8rem;
+            font-weight: 900;
+            /* 文字漸層效果 */
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+        }
+
+        .sub-title {
+            font-size: 0.95rem;
+            color: #555;
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* --- 新增：工程圖示區塊 --- */
+        .construction-icon-container {
+            margin: 2rem auto;
+            width: 100px;
+            height: 100px;
+            /* 讓內部的 SVG 顏色跟隨這個設定 */
+            color: var(--icon-color);
+            /* 添加緩慢旋轉動畫 */
+            animation: spin-slow 10s linear infinite;
+        }
+        
+        /* SVG 樣式調整 */
+        .construction-icon-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 6px rgba(255, 152, 0, 0.3));
+        }
+
+        /* 齒輪旋轉動畫 */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- 內容區塊 --- */
+        .content h2 {
+            font-size: 1.8rem;
+            margin: 1rem 0;
+            color: #222;
+            font-weight: 800;
+        }
+
+        .content p {
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+        
+        /* 強調文字 */
+        .highlight {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* --- 聯絡按鈕 --- */
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(63, 81, 181, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(63, 81, 181, 0.4);
+        }
+
+        /* --- 頁尾 --- */
+        footer {
+            margin-top: 2.5rem;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            padding-top: 1.5rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-area">
+            <div class="logo-text">鋒兄塗哥</div>
+            <div class="sub-title">Public Relations & Information</div>
+        </div>
+
+        <div class="construction-icon-container">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.08-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+            </svg>
+        </div>
+
+        <div class="content">
+            <h2>官方網站建置中</h2>
+            <p>
+                <span class="highlight">鋒兄</span>運籌帷幄 × <span class="highlight">塗哥</span>技術加持<br>
+                我們正在打造極致的數位公關體驗。<br>
+                系統核心升級中，精彩內容即將呈現。
+            </p>
+        </div>
+        
+        <a href="mailto:contact@example.com" class="btn">搶先聯繫我們</a>
+
+        <footer>
+            © 2025 Feng Xiong Tu Ge PR & Info. All Rights Reserved.
+        </footer>
+    </div>
+
+    </body>
+</html>
