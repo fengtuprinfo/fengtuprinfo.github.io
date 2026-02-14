@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>塗神水電王子 - 21點挑戰賽</title>
+    <style>
+        /* --- 基礎設定 --- */
+        body {
+            font-family: 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #1a1a1a; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%);
+            background-size: 20px 20px;
+            overscroll-behavior: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- 語言選單 --- */
+        .lang-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+        }
+
+        select#lang-select {
+            background: rgba(0, 0, 0, 0.6);
+            color: #f39c12;
+            border: 1px solid #f39c12;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- 牌桌設計 (RWD核心) --- */
+        .game-table {
+            background-color: #4a4a4a;
+            border: 10px solid #e67e22; 
+            border-radius: 20px;
+            padding: 20px; 
+            width: 95%; 
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(230, 126, 34, 0.3);
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+            transition: border-color 0.5s;
+        }
+
+        /* 標題 */
+        h1 { 
+            margin-top: 0; 
+            color: #f39c12;
+            text-shadow: 2px 2px 0px #000;
+            font-size: 28px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .title-part { display: inline-block; margin: 0 5px; }
+
+        /* 牌區 */
+        .hand-area {
+            margin: 10px 0;
+            min-height: 130px; 
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #666;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; 
+            gap: 5px;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        /* 卡牌 */
+        .card {
+            width: 75px;
+            height: 110px;
+            background: white;
+            border-radius: 8px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        
+        .card.red { color: #c0392b; }
+        .card.black { color: #2c3e50; }
+
+        .suit-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+        }
+
+        /* 分數顯示 */
+        .score-display {
+            font-size: 16px;
+            background: #e67e22;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* 訊息區 */
+        #message-area {
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #f1c40f;
+            text-shadow: 1px 1px 4px black;
+            padding: 0 5px;
+            line-height: 1.3; 
+        }
+
+        /* 按鈕區 */
+        .controls { 
+            margin-top: 10px; 
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px; 
+            font-weight: bold;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            touch-action: manipulation;
+            flex: 1;
+            min-width: 110px; 
+            max-width: 220px;
+            -webkit-appearance: none; 
+        }
+        
+        button:active { transform: translateY(4px); box-shadow: none; }
+        #btn-hit { background-color: #f39c12; color: #2c3e50; } 
+        #btn-stand { background-color: #c0392b; color: white; } 
+        #btn-new { background-color: #3498db; color: white; display: none; } 
+
+        /* 塗神圖片區域 */
+        #tushen-image-container {
+            margin-bottom: 10px;
+            height: 180px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        #tushen-image {
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+            transition: all 0.3s ease; 
+        }
+
+        .tushen-label {
+            position: absolute;
+            bottom: -15px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 10;
+        }
+
+        /* 手機直式 */
+        @media (max-width: 600px) {
+            .game-table { padding: 15px 8px; width: 96%; border-width: 6px; }
+            .title-part { display: block; margin: 0; }
+            h1 { font-size: 24px; margin-bottom: 5px; }
+            .card { width: 58px; height: 88px; font-size: 16px; padding: 3px; }
+            .suit-center { font-size: 26px; }
+            button { padding: 15px 0; font-size: 18px; width: 48%; min-width: auto; margin-bottom: 5px; }
+            #message-area { font-size: 16px; min-height: 50px; }
+            #tushen-image-container { height: 140px; }
+        }
+
+        /* 平板 */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .game-table { width: 85%; padding: 30px; }
+            h1 { font-size: 32px; }
+            button { padding: 18px 40px; font-size: 22px; }
+            .card { width: 85px; height: 125px; font-size: 22px; }
+            #tushen-image-container { height: 220px; }
+        }
+
+        /* 手機橫向 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body { padding: 5px; align-items: flex-start; }
+            h1 { display: none; }
+            .lang-container { top: 5px; right: 5px; }
+            .game-table { 
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+                gap: 10px;
+                padding: 10px;
+            }
+            #left-panel { grid-column: 1; display: flex; flex-direction: column; justify-content: center; }
+            #right-panel { grid-column: 2; }
+            #tushen-image-container { height: 100px; margin: 0; }
+            .tushen-label { bottom: 0; font-size: 12px; padding: 2px 8px; }
+            .hand-area { min-height: 90px; padding: 5px; margin: 5px 0; }
+            .card { width: 45px; height: 70px; font-size: 14px; }
+            .suit-center { font-size: 20px; }
+            #message-area { font-size: 16px; min-height: 25px; margin: 5px 0; }
+            button { padding: 8px 15px; font-size: 16px; }
+        }
+
+        #preload-area { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="preload-area"></div>
+
+<div class="lang-container">
+    <select id="lang-select" onchange="changeLanguage()">
+        <option value="zh-TW">🇹🇼 正體中文</option>
+        <option value="zh-CN">🇨🇳 简体中文</option>
+        <option value="en">🇺🇸 English</option>
+        <option value="ja">🇯🇵 日本語</option>
+    </select>
+</div>
+
+<div class="game-table" id="table-border">
+    <h1>
+        <span class="title-part" data-i18n="title_main">塗神水電王子</span>
+        <span class="title-part" data-i18n="title_sub">21點挑戰賽 🚰</span>
+    </h1>
+
+    <div id="left-panel">
+        <div id="tushen-image-container">
+            <img id="tushen-image" src="TUSHENDRAW.png" alt="Tu Shen">
+            <div id="tushen-label" class="tushen-label"></div>
+        </div>
+    </div>
+
+    <div id="right-panel">
+        <div class="hand-area" style="background: rgba(230, 126, 34, 0.1);">
+            <div class="score-display">
+                <span class="icon">👷</span>
+                <span data-i18n="dealer_name">塗三傑</span>: <span id="dealer-score">0</span> 
+                <span style="font-size:0.8em; opacity:0.8;">(<span data-i18n="text_score">分數</span>)</span>
+            </div>
+            <div class="cards-container" id="dealer-cards"></div>
+        </div>
+
+        <div class="hand-area">
+            <div class="score-display">
+                <span class="icon">👤</span>
+                <span data-i18n="player_name">你</span>: <span id="player-score">0</span>
+                <span style="font-size:0.8em; opacity:0.8;">(<span data-i18n="text_score">分數</span>)</span>
+            </div>
+            <div class="cards-container" id="player-cards"></div>
+        </div>
+    </div>
+
+    <div id="message-area" data-i18n="msg_welcome">準備好挑戰了嗎？</div>
+
+    <div class="controls">
+        <button id="btn-new" onclick="startGame()" style="display:inline-block;" data-i18n="btn_deal">發牌</button>
+        <button id="btn-hit" onclick="hit()" style="display:none;" data-i18n="btn_hit">要牌</button>
+        <button id="btn-stand" onclick="stand()" style="display:none;" data-i18n="btn_stand">停牌</button>
+    </div>
+</div>
+
+<script>
+    // --- 1. 多國語言設定 ---
+    let currentLang = 'zh-TW';
+    let currentMsgKey = 'msg_welcome';
+
+    const translations = {
+        'zh-TW': {
+            title_main: '塗神──水電王子',
+            title_sub: '21點挑戰賽 🚰',
+            dealer_name: '塗三傑', 
+            player_name: '你',
+            text_score: '分數',
+            btn_deal: '發牌',
+            btn_play_again: '再挑戰一次',
+            btn_hit: '要牌',
+            btn_stand: '停牌',
+            msg_welcome: '準備好挑戰了嗎？',
+            msg_start: '塗三傑：放馬過來吧！',
+            msg_bust_player: '爆牌了！塗三傑獲勝！',
+            msg_bust_dealer: '塗三傑爆牌了！您贏了！🎉',
+            msg_win: '恭喜！戰勝了塗三傑！🏆',
+            msg_lose: '塗三傑技高一籌，您輸了。🔧',
+            msg_push: '平局！再來一把！',
+            label_win: '塗三傑：哈哈！我贏啦！😎',
+            label_lose: '塗三傑：嗚嗚...怎麼輸了 😢',
+            label_push: '平手！再來一把？😐'
+        },
+        'zh-CN': {
+            title_main: '涂神──水电王子',
+            title_sub: '21点挑战赛 🚰',
+            dealer_name: '涂三杰', 
+            player_name: '你',
+            text_score: '分数',
+            btn_deal: '发牌',
+            btn_play_again: '再来一局',
+            btn_hit: '要牌',
+            btn_stand: '停牌',
+            msg_welcome: '准备好挑战了吗？',
+            msg_start: '涂三杰：放马过来吧！',
+            msg_bust_player: '爆牌了！涂三杰获胜！',
+            msg_bust_dealer: '涂三杰爆牌了！您赢了！🎉',
+            msg_win: '恭喜！战胜了涂三杰！🏆',
+            msg_lose: '涂三杰技高一筹，您输了。🔧',
+            msg_push: '平局！再来一把！',
+            label_win: '涂三杰：哈哈！我赢啦！😎',
+            label_lose: '涂三杰：呜呜...怎么输了 😢',
+            label_push: '平手！再来一把？😐'
+        },
+        'en': {
+            title_main: 'Tu Shen──Plumber Prince', 
+            title_sub: 'Blackjack 🚰',
+            dealer_name: 'Truman III', 
+            player_name: 'You',
+            text_score: 'Score',
+            btn_deal: 'Deal',
+            btn_play_again: 'Play Again',
+            btn_hit: 'Hit',
+            btn_stand: 'Stand',
+            msg_welcome: 'Ready to play?',
+            msg_start: 'Truman III: Bring it on!',
+            msg_bust_player: 'Bust! Truman III Wins!',
+            msg_bust_dealer: 'Dealer Bust! You Win! 🎉',
+            msg_win: 'Congratulations! You won! 🏆',
+            msg_lose: 'Truman III wins. 🔧',
+            msg_push: 'Push! Try again!',
+            label_win: 'Hahaha! I Win! 😎',
+            label_lose: 'Nooo... I lost 😢',
+            label_push: 'Draw! One more? 😐'
+        },
+        'ja': {
+            title_main: 'トゥシン──配管王子', 
+            title_sub: 'BJ チャレンジ 🚰',
+            dealer_name: '筒書三郎', 
+            player_name: 'あなた',
+            text_score: '点数',
+            btn_deal: '配る',
+            btn_play_again: 'もう一度',
+            btn_hit: 'ヒット',
+            btn_stand: 'スタンド',
+            msg_welcome: '準備はいい？',
+            msg_start: '筒書三郎：かかってこい！',
+            msg_bust_player: 'バスト！筒書三郎の勝ち！',
+            msg_bust_dealer: '筒書バスト！君の勝ち！🎉',
+            msg_win: 'おめでとう！君の勝ち！🏆',
+            msg_lose: '残念、君の負けだ。🔧',
+            msg_push: '引き分け！もう一回？',
+            label_win: 'ハハ！僕の勝ちだ！😎',
+            label_lose: 'うぅ...負けちゃった 😢',
+            label_push: '引き分け！もう一回？😐'
+        }
+    };
+
+    function t(key) {
+        return translations[currentLang][key] || key;
+    }
+
+    // --- 2. 語言切換邏輯 ---
+    function changeLanguage() {
+        const select = document.getElementById('lang-select');
+        currentLang = select.value;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (el.id === 'btn-new') {
+                el.innerHTML = gameOver ? t('btn_play_again') : t('btn_deal');
+            } else {
+                el.innerHTML = t(key);
+            }
+        });
+
+        if (currentMsgKey) {
+            document.getElementById('message-area').innerHTML = t(currentMsgKey);
+        }
+        
+        const label = document.getElementById('tushen-label');
+        if (label.style.opacity === '1') {
+             updateTushenImage(currentImageState);
+        }
+    }
+
+    // --- 3. 遊戲變數與圖片 ---
+    const suits = ['♠', '♥', '♦', '♣'];
+    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    let deck = [];
+    let playerHand = [];
+    let dealerHand = [];
+    let gameOver = false;
+    let currentImageState = 'normal';
+
+    const tushenImages = {
+        normal: { src: "TUSHENDRAW.png", labelKey: "label_push", color: "#e67e22" }, 
+        win: { src: "TUSHENWIN.png", labelKey: "label_win", color: "#e74c3c" }, 
+        lose: { src: "TUSHENLOSE.png", labelKey: "label_lose", color: "#2ecc71" }, 
+        push: { src: "TUSHENDRAW.png", labelKey: "label_push", color: "#95a5a6" } 
+    };
+
+    function preloadImages() {
+        const preloadContainer = document.getElementById('preload-area');
+        const imagesToLoad = ["TUSHENDRAW.png", "TUSHENWIN.png", "TUSHENLOSE.png"];
+        imagesToLoad.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            preloadContainer.appendChild(img);
+        });
+    }
+
+    window.onload = function() {
+        preloadImages();
+        changeLanguage(); // 初始化語言
+    };
+
+    // --- 4. 遊戲邏輯 ---
+    function createDeck() {
+        deck = [];
+        for (let suit of suits) {
+            for (let value of values) {
+                deck.push({ suit, value });
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+    }
+
+    function getCardValue(card) {
+        if (['J', 'Q', 'K'].includes(card.value)) return 10;
+        if (card.value === 'A') return 11;
+        return parseInt(card.value);
+    }
+
+    function calculateScore(hand) {
+        let score = 0;
+        let aceCount = 0;
+        for (let card of hand) {
+            score += getCardValue(card);
+            if (card.value === 'A') aceCount++;
+        }
+        while (score > 21 && aceCount > 0) {
+            score -= 10;
+            aceCount--;
+        }
+        return score;
+    }
+
+    function renderCard(card, container, hidden = false) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = `card ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`;
+        
+        if (hidden) {
+            cardDiv.style.background = '#e67e22'; 
+            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 5px, #d35400 5px, #d35400 10px)';
+            cardDiv.style.border = '2px solid white';
+        } else {
+            cardDiv.innerHTML = `
+                <div style="text-align:left; line-height: 1;">${card.value}</div>
+                <div class="suit-center">${card.suit}</div>
+                <div style="text-align:right; line-height: 1;">${card.value}</div>
+            `;
+        }
+        container.appendChild(cardDiv);
+    }
+
+    // 更新介面 (修復重點：如果 gameOver 為真，強制 showDealerHidden 為 true)
+    function updateUI(showDealerHidden = false) {
+        const dContainer = document.getElementById('dealer-cards');
+        const pContainer = document.getElementById('player-cards');
+        dContainer.innerHTML = '';
+        pContainer.innerHTML = '';
+
+        // 如果遊戲結束，強制翻開莊家牌
+        if (gameOver) {
+            showDealerHidden = true;
+        }
+
+        dealerHand.forEach((card, index) => {
+            // 只有在不是顯示全部且是第一張牌時才隱藏
+            if (index === 0 && !showDealerHidden) {
+                renderCard(card, dContainer, true);
+            } else {
+                renderCard(card, dContainer);
+            }
+        });
+
+        playerHand.forEach(card => renderCard(card, pContainer));
+
+        document.getElementById('player-score').innerText = calculateScore(playerHand);
+        
+        // 分數顯示邏輯：如果顯示暗牌(代表翻開了)，顯示真分數；否則顯示 ?
+        document.getElementById('dealer-score').innerText = showDealerHidden ? calculateScore(dealerHand) : "?";
+    }
+
+    function showMessage(msgKey, color = '#f1c40f') {
+        const el = document.getElementById('message-area');
+        currentMsgKey = msgKey;
+        el.innerHTML = t(msgKey); 
+        el.style.color = color;
+    }
+
+    function toggleButtons(playing) {
+        const btnNew = document.getElementById('btn-new');
+        btnNew.style.display = playing ? 'none' : 'inline-block';
+        document.getElementById('btn-hit').style.display = playing ? 'inline-block' : 'none';
+        document.getElementById('btn-stand').style.display = playing ? 'inline-block' : 'none';
+        
+        if (!playing) {
+            btnNew.innerText = gameOver ? t('btn_play_again') : t('btn_deal');
+        }
+    }
+
+    function updateTushenImage(state) {
+        currentImageState = state;
+        const img = document.getElementById('tushen-image');
+        const label = document.getElementById('tushen-label');
+        const tableBorder = document.getElementById('table-border'); 
+        const data = tushenImages[state];
+        
+        img.src = data.src;
+        tableBorder.style.borderColor = data.color; 
+        
+        if (state !== 'normal') {
+            label.innerText = t(data.labelKey);
+            label.style.opacity = 1;
+            
+            if (state === 'lose') label.style.background = 'rgba(46, 204, 113, 0.9)'; 
+            else if (state === 'win') label.style.background = 'rgba(231, 76, 60, 0.9)'; 
+            else label.style.background = 'rgba(149, 165, 166, 0.9)'; 
+        } else {
+            label.style.opacity = 0;
+        }
+    }
+
+    function startGame() {
+        createDeck();
+        playerHand = [deck.pop(), deck.pop()];
+        dealerHand = [deck.pop(), deck.pop()];
+        gameOver = false;
+        
+        updateUI(false);
+        toggleButtons(true);
+        showMessage("msg_start"); 
+        updateTushenImage('normal'); 
+
+        if (calculateScore(playerHand) === 21) {
+            stand();
+        }
+    }
+
+    function hit() {
+        if (gameOver) return;
+        playerHand.push(deck.pop());
+        
+        if (calculateScore(playerHand) > 21) {
+            // 爆牌時直接結束遊戲，endGame 會處理翻牌
+            endGame("msg_bust_player", '#e74c3c', 'win');
+        } else {
+            updateUI(false);
+        }
+    }
+
+    function stand() {
+        if (gameOver) return;
+        while (calculateScore(dealerHand) < 17) {
+            dealerHand.push(deck.pop());
+        }
+        // 這裡不需要手動 call updateUI(true)，因為 determineWinner 會 call endGame
+        // 而 endGame 會設定 gameOver = true 並呼叫 updateUI
+        determineWinner();
+    }
+
+    function determineWinner() {
+        const pScore = calculateScore(playerHand);
+        const dScore = calculateScore(dealerHand);
+
+        if (dScore > 21) {
+            endGame("msg_bust_dealer", '#2ecc71', 'lose');
+        } else if (pScore > dScore) {
+            endGame("msg_win", '#2ecc71', 'lose');
+        } else if (pScore < dScore) {
+            endGame("msg_lose", '#e74c3c', 'win');
+        } else {
+            endGame("msg_push", 'white', 'push');
+        }
+    }
+
+    function endGame(msgKey, color, imageState) {
+        gameOver = true; // 設定遊戲結束
+        updateUI(true);  // 強制翻牌
+        showMessage(msgKey, color);
+        toggleButtons(false);
+        updateTushenImage(imageState); 
+    }
+</script>
+
+</body>
+</html>
