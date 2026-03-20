@@ -1,0 +1,1001 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>憛?瘞湧?? - 21暺??啗魚</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        color-scheme: dark;
+        --bg: #06090d;
+        --bg-elevated: rgba(15, 21, 29, 0.86);
+        --panel: rgba(14, 19, 28, 0.82);
+        --panel-strong: rgba(18, 26, 38, 0.96);
+        --line: rgba(255, 255, 255, 0.1);
+        --line-strong: rgba(255, 255, 255, 0.18);
+        --text: #f1f4f8;
+        --muted: rgba(241, 244, 248, 0.64);
+        --accent: #f49c52;
+        --accent-2: #c4ff6f;
+        --danger: #ef6b63;
+        --success: #66d98f;
+        --radius-xl: 30px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        min-height: 100%;
+    }
+
+    body {
+        position: relative;
+        margin: 0;
+        padding: clamp(16px, 3vw, 30px);
+        display: grid;
+        place-items: center;
+        overflow-x: hidden;
+        color: var(--text);
+        font-family: "Manrope", "Noto Sans TC", sans-serif;
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+        background:
+            radial-gradient(circle at 18% 18%, rgba(196, 255, 111, 0.12), transparent 22%),
+            radial-gradient(circle at 82% 12%, rgba(244, 156, 82, 0.18), transparent 26%),
+            radial-gradient(circle at 50% 100%, rgba(94, 123, 255, 0.12), transparent 30%),
+            linear-gradient(145deg, #05070a 0%, #0b1017 45%, #141b24 100%);
+    }
+
+    body::before,
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    body::before {
+        background:
+            linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(circle at center, black 46%, transparent 92%);
+        opacity: 0.35;
+    }
+
+    body::after {
+        background:
+            linear-gradient(125deg, transparent 0%, rgba(255, 255, 255, 0.05) 38%, transparent 58%),
+            radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 42%);
+        mix-blend-mode: screen;
+        opacity: 0.55;
+    }
+
+    .scene-lattice,
+    .scene-lattice::before,
+    .scene-lattice::after {
+        position: fixed;
+        border-radius: 999px;
+        filter: blur(22px);
+        pointer-events: none;
+    }
+
+    .scene-lattice {
+        width: 18rem;
+        height: 18rem;
+        left: -4rem;
+        bottom: 10vh;
+        background: rgba(244, 156, 82, 0.16);
+    }
+
+    .scene-lattice::before,
+    .scene-lattice::after {
+        content: "";
+    }
+
+    .scene-lattice::before {
+        width: 14rem;
+        height: 14rem;
+        top: -7rem;
+        right: -96vw;
+        background: rgba(196, 255, 111, 0.12);
+    }
+
+    .scene-lattice::after {
+        width: 12rem;
+        height: 12rem;
+        top: -16rem;
+        right: -38vw;
+        background: rgba(99, 123, 255, 0.12);
+    }
+
+    .interface-shell {
+        position: relative;
+        width: min(100%, 980px);
+        padding: clamp(14px, 2vw, 20px);
+        border-radius: calc(var(--radius-xl) + 8px);
+        background:
+            linear-gradient(140deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+            rgba(255, 255, 255, 0.02);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+    }
+
+    .interface-shell::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        padding: 1px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(244, 156, 82, 0.28), rgba(196, 255, 111, 0.2));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    .lang-container {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        z-index: 10;
+    }
+
+    select#lang-select {
+        min-width: 148px;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+            rgba(10, 15, 22, 0.92);
+        color: var(--text);
+        font: 700 0.9rem "Sora", sans-serif;
+        letter-spacing: 0.04em;
+        outline: none;
+        cursor: pointer;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .game-table {
+        position: relative;
+        width: 100%;
+        padding: clamp(68px, 8vw, 84px) clamp(16px, 4vw, 34px) clamp(18px, 3vw, 26px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--radius-xl);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)),
+            linear-gradient(160deg, rgba(8, 12, 18, 0.92), rgba(18, 26, 38, 0.92));
+        text-align: center;
+        overflow: hidden;
+        transition: border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .game-table::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border-radius: calc(var(--radius-xl) - 10px);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        pointer-events: none;
+    }
+
+    .game-table::after {
+        content: "";
+        position: absolute;
+        inset: auto auto -40px -20px;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(244, 156, 82, 0.18), transparent 70%);
+        filter: blur(20px);
+        pointer-events: none;
+    }
+
+    h1 {
+        position: relative;
+        z-index: 1;
+        margin: 0 0 18px;
+        color: var(--text);
+        font-family: "Sora", sans-serif;
+        font-size: clamp(1.9rem, 3vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        line-height: 1.1;
+        text-transform: uppercase;
+        text-shadow: 0 12px 38px rgba(0, 0, 0, 0.34);
+    }
+
+    .title-part {
+        display: inline-block;
+        margin: 0 0.25em;
+    }
+
+    #left-panel {
+        position: relative;
+        z-index: 1;
+    }
+
+    #right-panel {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 14px;
+    }
+
+    #tushen-image-container {
+        position: relative;
+        display: grid;
+        place-items: center;
+        height: clamp(190px, 26vw, 270px);
+        margin-bottom: 24px;
+        border-radius: calc(var(--radius-lg) + 6px);
+        background:
+            radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.08), transparent 42%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+            rgba(8, 12, 18, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+    }
+
+    #tushen-image-container::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border-radius: calc(var(--radius-lg) - 2px);
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        pointer-events: none;
+    }
+
+    #tushen-image {
+        position: relative;
+        z-index: 1;
+        height: calc(100% - 26px);
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.38));
+        transition: transform 0.35s ease, filter 0.35s ease;
+    }
+
+    .hand-area {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        min-height: 172px;
+        margin: 0;
+        padding: 18px 16px 16px;
+        border-radius: var(--radius-lg);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+            rgba(9, 13, 20, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+    }
+
+    .hand-area::after {
+        content: "";
+        position: absolute;
+        inset: auto 18px 0 18px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    }
+
+    .cards-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+        min-height: 118px;
+    }
+
+    .card {
+        width: 80px;
+        height: 118px;
+        padding: 8px 9px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(252, 252, 250, 0.98), rgba(224, 228, 234, 0.98));
+        color: #1b2430;
+        border: 1px solid rgba(14, 19, 28, 0.12);
+        box-shadow: 0 20px 24px rgba(0, 0, 0, 0.24);
+        font-size: 1.12rem;
+        font-weight: 800;
+        user-select: none;
+        transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .card.red {
+        color: #b8443d;
+    }
+
+    .card.black {
+        color: #21313f;
+    }
+
+    .suit-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+    }
+
+    .score-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background:
+            linear-gradient(90deg, rgba(244, 156, 82, 0.18), rgba(196, 255, 111, 0.16)),
+            rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--text);
+        font: 700 0.95rem "Sora", sans-serif;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    #message-area {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        min-height: 72px;
+        margin: 16px 0 4px;
+        padding: 10px 14px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #ffe19e;
+        font-family: "Sora", sans-serif;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        font-weight: 600;
+        line-height: 1.45;
+        text-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+    }
+
+    .controls {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+    }
+
+    button {
+        position: relative;
+        min-width: 140px;
+        max-width: 240px;
+        flex: 1;
+        padding: 14px 22px;
+        border: 1px solid transparent;
+        border-radius: 18px;
+        font: 800 1rem "Sora", sans-serif;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        touch-action: manipulation;
+        color: #10151d;
+        -webkit-appearance: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+        box-shadow: 0 16px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.05);
+    }
+
+    button:active {
+        transform: translateY(1px);
+    }
+
+    #btn-hit {
+        background: linear-gradient(135deg, #ffd08a, #f49c52);
+    }
+
+    #btn-stand {
+        background: linear-gradient(135deg, #ff9688, #ef6b63);
+        color: #fff6f5;
+    }
+
+    #btn-new {
+        background: linear-gradient(135deg, #d3ff90, #8cd56a);
+        color: #10170d;
+        display: none;
+    }
+
+    .tushen-label {
+        position: absolute;
+        bottom: 14px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--text);
+        font: 700 0.92rem "Sora", sans-serif;
+        backdrop-filter: blur(12px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        white-space: nowrap;
+        z-index: 2;
+    }
+
+    #preload-area {
+        display: none;
+    }
+
+    @media (max-width: 860px) {
+        .interface-shell {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .lang-container {
+            top: 20px;
+            right: 20px;
+        }
+
+        .game-table {
+            padding-top: 74px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+
+        .lang-container {
+            position: static;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-table {
+            padding: 16px 10px 14px;
+        }
+
+        h1 {
+            margin-bottom: 14px;
+            font-size: 1.7rem;
+        }
+
+        .title-part {
+            display: block;
+            margin: 0;
+        }
+
+        #tushen-image-container {
+            height: 168px;
+            margin-bottom: 16px;
+        }
+
+        .hand-area {
+            min-height: 146px;
+            padding: 14px 10px 12px;
+        }
+
+        .card {
+            width: 62px;
+            height: 94px;
+            padding: 6px 7px;
+            font-size: 0.95rem;
+            border-radius: 14px;
+        }
+
+        .suit-center {
+            font-size: 1.5rem;
+        }
+
+        #message-area {
+            min-height: 60px;
+            font-size: 0.96rem;
+        }
+
+        button {
+            min-width: 0;
+            width: calc(50% - 6px);
+            padding: 13px 12px;
+            font-size: 0.92rem;
+        }
+    }
+
+    @media (max-height: 560px) and (orientation: landscape) {
+        body {
+            padding: 8px;
+            align-items: start;
+        }
+
+        .interface-shell {
+            width: min(100%, 1100px);
+        }
+
+        .lang-container {
+            top: 14px;
+            right: 14px;
+        }
+
+        .game-table {
+            display: grid;
+            grid-template-columns: minmax(190px, 0.9fr) 1.2fr;
+            gap: 12px;
+            padding: 58px 14px 14px;
+            align-items: start;
+        }
+
+        h1 {
+            display: none;
+        }
+
+        #left-panel {
+            align-self: stretch;
+        }
+
+        #tushen-image-container {
+            height: 124px;
+            margin: 0;
+        }
+
+        #right-panel {
+            gap: 10px;
+        }
+
+        .hand-area {
+            min-height: 104px;
+            padding: 12px 10px 10px;
+        }
+
+        .cards-container {
+            min-height: 72px;
+            gap: 8px;
+        }
+
+        .card {
+            width: 49px;
+            height: 74px;
+            padding: 4px 5px;
+            font-size: 0.78rem;
+            border-radius: 12px;
+        }
+
+        .suit-center {
+            font-size: 1.15rem;
+        }
+
+        #message-area {
+            grid-column: 1 / -1;
+            min-height: 44px;
+            margin: 0;
+        }
+
+        .controls {
+            grid-column: 1 / -1;
+            margin-top: 0;
+        }
+
+        button {
+            padding: 10px 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="scene-lattice"></div>
+<div id="preload-area"></div>
+
+<main class="interface-shell">
+    <div class="lang-container">
+        <select id="lang-select" onchange="changeLanguage()">
+            <option value="zh-TW">?? 甇??銝剜?</option>
+            <option value="zh-CN">?? 蝞雿葉??/option>
+            <option value="en">?? English</option>
+            <option value="ja">?? ?交隤?/option>
+        </select>
+    </div>
+
+    <div class="game-table" id="table-border">
+        <h1>
+            <span class="title-part" data-i18n="title_main">憛?瘞湧??</span>
+            <span class="title-part" data-i18n="title_sub">21暺??啗魚 ?</span>
+        </h1>
+
+        <div id="left-panel">
+            <div id="tushen-image-container">
+                <img id="tushen-image" src="TUSHENDRAW.png" alt="Tu Shen">
+                <div id="tushen-label" class="tushen-label"></div>
+            </div>
+        </div>
+
+        <div id="right-panel">
+            <div class="hand-area" style="background: linear-gradient(180deg, rgba(244, 156, 82, 0.16), rgba(255, 255, 255, 0.03)), rgba(9, 13, 20, 0.72);">
+                <div class="score-display">
+                    <span class="icon">?</span>
+                    <span data-i18n="dealer_name">憛???/span>: <span id="dealer-score">0</span> 
+                    <span style="font-size:0.8em; opacity:0.8;">(<span data-i18n="text_score">?</span>)</span>
+                </div>
+                <div class="cards-container" id="dealer-cards"></div>
+            </div>
+
+            <div class="hand-area">
+                <div class="score-display">
+                    <span class="icon">?</span>
+                    <span data-i18n="player_name">雿?/span>: <span id="player-score">0</span>
+                    <span style="font-size:0.8em; opacity:0.8;">(<span data-i18n="text_score">?</span>)</span>
+                </div>
+                <div class="cards-container" id="player-cards"></div>
+            </div>
+        </div>
+
+        <div id="message-area" data-i18n="msg_welcome">皞?憟賣??唬???</div>
+
+        <div class="controls">
+            <button id="btn-new" onclick="startGame()" style="display:inline-block;" data-i18n="btn_deal">?潛?</button>
+            <button id="btn-hit" onclick="hit()" style="display:none;" data-i18n="btn_hit">閬?</button>
+            <button id="btn-stand" onclick="stand()" style="display:none;" data-i18n="btn_stand">??</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- 1. 憭?隤?閮剖? ---
+    let currentLang = 'zh-TW';
+    let currentMsgKey = 'msg_welcome';
+
+    const translations = {
+        'zh-TW': {
+            title_main: '憛???瘞湧??',
+            title_sub: '21暺??啗魚 ?',
+            dealer_name: '憛???, 
+            player_name: '雿?,
+            text_score: '?',
+            btn_deal: '?潛?',
+            btn_play_again: '???唬?甈?,
+            btn_hit: '閬?',
+            btn_stand: '??',
+            msg_welcome: '皞?憟賣??唬???',
+            msg_start: '憛????暸收???改?',
+            msg_bust_player: '??鈭?憛????',
+            msg_bust_dealer: '憛?????嚗韐?嚗??,
+            msg_win: '?剖?嚗??憛?????',
+            msg_lose: '憛???擃?蝐??刻撓鈭??,
+            msg_push: '撟喳?嚗?靘???',
+            label_win: '憛?????嚗?韐嚗??,
+            label_lose: '憛?????...?獐頛訾? ?',
+            label_push: '撟單?嚗?靘?????'
+        },
+        'zh-CN': {
+            title_main: '瘨???瘞渡??',
+            title_sub: '21?寞??? ?',
+            dealer_name: '瘨???, 
+            player_name: '雿?,
+            text_score: '?',
+            btn_deal: '??',
+            btn_play_again: '?銝撅',
+            btn_hit: '閬?',
+            btn_stand: '??',
+            msg_welcome: '??憟賣?????',
+            msg_start: '瘨??堆??暸帕餈?改?',
+            msg_bust_player: '??鈭?瘨??啗??',
+            msg_bust_dealer: '瘨??啁???嚗韏Ｖ?嚗??,
+            msg_win: '?剖?嚗???瘨??堆???',
+            msg_lose: '瘨??唳?擃?蝑對??刻?鈭??,
+            msg_push: '撟喳?嚗??乩???',
+            label_win: '瘨??堆???嚗?韏Ｗ嚗??,
+            label_lose: '瘨??堆???...??颲? ?',
+            label_push: '撟單?嚗??乩?????'
+        },
+        'en': {
+            title_main: 'Tu Shen??Plumber Prince', 
+            title_sub: 'Blackjack ?',
+            dealer_name: 'Truman III', 
+            player_name: 'You',
+            text_score: 'Score',
+            btn_deal: 'Deal',
+            btn_play_again: 'Play Again',
+            btn_hit: 'Hit',
+            btn_stand: 'Stand',
+            msg_welcome: 'Ready to play?',
+            msg_start: 'Truman III: Bring it on!',
+            msg_bust_player: 'Bust! Truman III Wins!',
+            msg_bust_dealer: 'Dealer Bust! You Win! ??',
+            msg_win: 'Congratulations! You won! ??',
+            msg_lose: 'Truman III wins. ?',
+            msg_push: 'Push! Try again!',
+            label_win: 'Hahaha! I Win! ??',
+            label_lose: 'Nooo... I lost ?',
+            label_push: 'Draw! One more? ??'
+        },
+        'ja': {
+            title_main: '??瑯???恣??', 
+            title_sub: 'BJ ??研???',
+            dealer_name: '蝑銝?', 
+            player_name: '???,
+            text_score: '?寞',
+            btn_deal: '??',
+            btn_play_again: '??銝摨?,
+            btn_hit: '????,
+            btn_stand: '?嫘?喋?',
+            msg_welcome: '皞??胯???',
+            msg_start: '蝑銝?嚗???艾???',
+            msg_bust_player: '???蝑銝??桀??∴?',
+            msg_bust_dealer: '蝑?????嚗??,
+            msg_win: '???扼????嚗??,
+            msg_lose: '畾艙???株??????,
+            msg_push: '撘???嚗?????',
+            label_win: '??嚗??桀??～?嚗??,
+            label_lose: '??...鞎??～???? ?',
+            label_push: '撘???嚗???????'
+        }
+    };
+
+    function t(key) {
+        return translations[currentLang][key] || key;
+    }
+
+    // --- 2. 隤????摩 ---
+    function changeLanguage() {
+        const select = document.getElementById('lang-select');
+        currentLang = select.value;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (el.id === 'btn-new') {
+                el.innerHTML = gameOver ? t('btn_play_again') : t('btn_deal');
+            } else {
+                el.innerHTML = t(key);
+            }
+        });
+
+        if (currentMsgKey) {
+            document.getElementById('message-area').innerHTML = t(currentMsgKey);
+        }
+        
+        const label = document.getElementById('tushen-label');
+        if (label.style.opacity === '1') {
+             updateTushenImage(currentImageState);
+        }
+    }
+
+    // --- 3. ?霈????---
+    const suits = ['??, '??, '??, '??];
+    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    let deck = [];
+    let playerHand = [];
+    let dealerHand = [];
+    let gameOver = false;
+    let currentImageState = 'normal';
+
+    const tushenImages = {
+        normal: { src: "TUSHENDRAW.png", labelKey: "label_push", color: "#e67e22" }, 
+        win: { src: "TUSHENWIN.png", labelKey: "label_win", color: "#e74c3c" }, 
+        lose: { src: "TUSHENLOSE.png", labelKey: "label_lose", color: "#2ecc71" }, 
+        push: { src: "TUSHENDRAW.png", labelKey: "label_push", color: "#95a5a6" } 
+    };
+
+    function preloadImages() {
+        const preloadContainer = document.getElementById('preload-area');
+        const imagesToLoad = ["TUSHENDRAW.png", "TUSHENWIN.png", "TUSHENLOSE.png"];
+        imagesToLoad.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            preloadContainer.appendChild(img);
+        });
+    }
+
+    window.onload = function() {
+        preloadImages();
+        changeLanguage(); // ????閮
+    };
+
+    // --- 4. ??摩 ---
+    function createDeck() {
+        deck = [];
+        for (let suit of suits) {
+            for (let value of values) {
+                deck.push({ suit, value });
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+    }
+
+    function getCardValue(card) {
+        if (['J', 'Q', 'K'].includes(card.value)) return 10;
+        if (card.value === 'A') return 11;
+        return parseInt(card.value);
+    }
+
+    function calculateScore(hand) {
+        let score = 0;
+        let aceCount = 0;
+        for (let card of hand) {
+            score += getCardValue(card);
+            if (card.value === 'A') aceCount++;
+        }
+        while (score > 21 && aceCount > 0) {
+            score -= 10;
+            aceCount--;
+        }
+        return score;
+    }
+
+    function renderCard(card, container, hidden = false) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = `card ${['??, '??].includes(card.suit) ? 'red' : 'black'}`;
+        
+        if (hidden) {
+            cardDiv.style.background = '#e67e22'; 
+            cardDiv.style.backgroundImage = 'repeating-linear-gradient(45deg, transparent, transparent 5px, #d35400 5px, #d35400 10px)';
+            cardDiv.style.border = '2px solid white';
+        } else {
+            cardDiv.innerHTML = `
+                <div style="text-align:left; line-height: 1;">${card.value}</div>
+                <div class="suit-center">${card.suit}</div>
+                <div style="text-align:right; line-height: 1;">${card.value}</div>
+            `;
+        }
+        container.appendChild(cardDiv);
+    }
+
+    // ?湔隞 (靽桀儔??嚗???gameOver ?箇?嚗撥??showDealerHidden ??true)
+    function updateUI(showDealerHidden = false) {
+        const dContainer = document.getElementById('dealer-cards');
+        const pContainer = document.getElementById('player-cards');
+        dContainer.innerHTML = '';
+        pContainer.innerHTML = '';
+
+        // 憒??蝯?嚗撥?嗥蕃??摰嗥?
+        if (gameOver) {
+            showDealerHidden = true;
+        }
+
+        dealerHand.forEach((card, index) => {
+            // ?芣??其??舫＊蝷箏?其??舐洵銝撘萇????梯?
+            if (index === 0 && !showDealerHidden) {
+                renderCard(card, dContainer, true);
+            } else {
+                renderCard(card, dContainer);
+            }
+        });
+
+        playerHand.forEach(card => renderCard(card, pContainer));
+
+        document.getElementById('player-score').innerText = calculateScore(playerHand);
+        
+        // ?憿舐內?摩嚗??＊蝷箸???隞?”蝧駁?鈭?嚗＊蝷箇??嚗?＊蝷??
+        document.getElementById('dealer-score').innerText = showDealerHidden ? calculateScore(dealerHand) : "?";
+    }
+
+    function showMessage(msgKey, color = '#f1c40f') {
+        const el = document.getElementById('message-area');
+        currentMsgKey = msgKey;
+        el.innerHTML = t(msgKey); 
+        el.style.color = color;
+    }
+
+    function toggleButtons(playing) {
+        const btnNew = document.getElementById('btn-new');
+        btnNew.style.display = playing ? 'none' : 'inline-block';
+        document.getElementById('btn-hit').style.display = playing ? 'inline-block' : 'none';
+        document.getElementById('btn-stand').style.display = playing ? 'inline-block' : 'none';
+        
+        if (!playing) {
+            btnNew.innerText = gameOver ? t('btn_play_again') : t('btn_deal');
+        }
+    }
+
+    function updateTushenImage(state) {
+        currentImageState = state;
+        const img = document.getElementById('tushen-image');
+        const label = document.getElementById('tushen-label');
+        const tableBorder = document.getElementById('table-border'); 
+        const data = tushenImages[state];
+        
+        img.src = data.src;
+        tableBorder.style.borderColor = data.color; 
+        
+        if (state !== 'normal') {
+            label.innerText = t(data.labelKey);
+            label.style.opacity = 1;
+            
+            if (state === 'lose') label.style.background = 'rgba(46, 204, 113, 0.9)'; 
+            else if (state === 'win') label.style.background = 'rgba(231, 76, 60, 0.9)'; 
+            else label.style.background = 'rgba(149, 165, 166, 0.9)'; 
+        } else {
+            label.style.opacity = 0;
+        }
+    }
+
+    function startGame() {
+        createDeck();
+        playerHand = [deck.pop(), deck.pop()];
+        dealerHand = [deck.pop(), deck.pop()];
+        gameOver = false;
+        
+        updateUI(false);
+        toggleButtons(true);
+        showMessage("msg_start"); 
+        updateTushenImage('normal'); 
+
+        if (calculateScore(playerHand) === 21) {
+            stand();
+        }
+    }
+
+    function hit() {
+        if (gameOver) return;
+        playerHand.push(deck.pop());
+        
+        if (calculateScore(playerHand) > 21) {
+            // ????亦????莎?endGame ???蕃??            endGame("msg_bust_player", '#e74c3c', 'win');
+        } else {
+            updateUI(false);
+        }
+    }
+
+    function stand() {
+        if (gameOver) return;
+        while (calculateScore(dealerHand) < 17) {
+            dealerHand.push(deck.pop());
+        }
+        // ?ㄐ銝?閬???call updateUI(true)嚗???determineWinner ??call endGame
+        // ??endGame ?身摰?gameOver = true 銝血??updateUI
+        determineWinner();
+    }
+
+    function determineWinner() {
+        const pScore = calculateScore(playerHand);
+        const dScore = calculateScore(dealerHand);
+
+        if (dScore > 21) {
+            endGame("msg_bust_dealer", '#2ecc71', 'lose');
+        } else if (pScore > dScore) {
+            endGame("msg_win", '#2ecc71', 'lose');
+        } else if (pScore < dScore) {
+            endGame("msg_lose", '#e74c3c', 'win');
+        } else {
+            endGame("msg_push", 'white', 'push');
+        }
+    }
+
+    function endGame(msgKey, color, imageState) {
+        gameOver = true; // 閮剖??蝯?
+        updateUI(true);  // 撘瑕蝧餌?
+        showMessage(msgKey, color);
+        toggleButtons(false);
+        updateTushenImage(imageState); 
+    }
+</script>
+
+</body>
+</html>

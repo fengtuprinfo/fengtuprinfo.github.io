@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?萄?撣?敺拐? - Cat Revenge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #090c11;
+            --bg-deep: #11161e;
+            --panel: rgba(10, 14, 20, 0.78);
+            --panel-edge: rgba(244, 156, 82, 0.28);
+            --line: rgba(255, 255, 255, 0.1);
+            --text: #edf1f6;
+            --muted: rgba(237, 241, 246, 0.62);
+            --accent: #f49c52;
+            --accent-soft: rgba(244, 156, 82, 0.18);
+            --accent-alt: #b9ff66;
+            --shadow: 0 32px 90px rgba(0, 0, 0, 0.52);
+            --radius-xl: 34px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(18px, 3vw, 36px);
+            overflow: hidden;
+            font-family: "Noto Sans TC", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(185, 255, 102, 0.12), transparent 26%),
+                radial-gradient(circle at 82% 16%, rgba(244, 156, 82, 0.2), transparent 24%),
+                radial-gradient(circle at 50% 100%, rgba(81, 126, 255, 0.12), transparent 30%),
+                linear-gradient(145deg, #06080d 0%, #0b1016 45%, #121922 100%);
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        body::before {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: radial-gradient(circle at center, black 45%, transparent 92%);
+            opacity: 0.34;
+        }
+
+        body::after {
+            background:
+                linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.06) 35%, transparent 55%),
+                linear-gradient(transparent 0%, rgba(255, 255, 255, 0.02) 100%);
+            mix-blend-mode: screen;
+            opacity: 0.55;
+        }
+
+        .shell {
+            position: relative;
+            width: min(100%, 940px);
+            padding: clamp(12px, 1.8vw, 18px);
+            border-radius: calc(var(--radius-xl) + 8px);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+                rgba(255, 255, 255, 0.02);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            isolation: isolate;
+        }
+
+        .shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(244, 156, 82, 0.35), rgba(185, 255, 102, 0.24));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .viewport-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--line);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)),
+                linear-gradient(160deg, rgba(6, 8, 13, 0.94), rgba(18, 25, 34, 0.86));
+            min-height: min(100vh - 72px, 1060px);
+        }
+
+        .viewport-frame::before,
+        .viewport-frame::after {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: calc(var(--radius-xl) - 10px);
+            pointer-events: none;
+        }
+
+        .viewport-frame::before {
+            border: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .viewport-frame::after {
+            inset: auto 24px 24px auto;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(244, 156, 82, 0.22), transparent 68%);
+            filter: blur(14px);
+        }
+
+        #game-container {
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            border-radius: calc(var(--radius-xl) - 8px);
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+                inset 0 -20px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        .loading {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            z-index: 1000;
+            background:
+                radial-gradient(circle at top, rgba(244, 156, 82, 0.14), transparent 22%),
+                radial-gradient(circle at bottom, rgba(185, 255, 102, 0.12), transparent 26%),
+                linear-gradient(145deg, rgba(5, 8, 12, 0.96), rgba(10, 14, 20, 0.92));
+            transition: opacity 0.45s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-panel {
+            width: min(100%, 440px);
+            padding: 28px;
+            border-radius: 26px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+                rgba(9, 12, 17, 0.82);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+            backdrop-filter: blur(18px);
+        }
+
+        .loading-text {
+            font-family: "Sora", sans-serif;
+            font-size: clamp(1.4rem, 2vw, 2rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text);
+            margin-bottom: 20px;
+            text-shadow: 0 0 18px rgba(244, 156, 82, 0.28);
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+
+        .loading-bar {
+            position: relative;
+            width: 100%;
+            height: 12px;
+            overflow: hidden;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .loading-bar::before {
+            content: "";
+            position: absolute;
+            inset: 2px;
+            border-radius: inherit;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent);
+        }
+
+        .loading-progress {
+            position: relative;
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent) 0%, #ffd28c 42%, var(--accent-alt) 100%);
+            box-shadow: 0 0 24px rgba(244, 156, 82, 0.42);
+            transition: width 0.3s ease;
+        }
+
+        .loading-progress::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+            animation: scan 2.2s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            50% {
+                opacity: 0.78;
+                transform: translateY(-3px);
+            }
+        }
+
+        @keyframes scan {
+            from {
+                transform: translateX(-140%);
+            }
+
+            to {
+                transform: translateX(180%);
+            }
+        }
+
+        @media (max-width: 860px) {
+            body {
+                padding: 12px;
+            }
+
+            .shell {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .viewport-frame {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-panel">
+            <div class="loading-text">? ?萄?撣迤?冽??儔隞?..</div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+    <main class="shell">
+        <div class="viewport-frame">
+            <div id="game-container"></div>
+        </div>
+    </main>
+    <script src="game.js"></script>
+</body>
+</html>
